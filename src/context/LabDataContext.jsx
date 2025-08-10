@@ -6,7 +6,7 @@ import {
   getSchedules,
   getUserBookings,
   getAllBookings // Adicione esta nova função no labService
-} from '../services/labService';
+} from '../services/labServices';
 
 const LabDataContext = createContext();
 

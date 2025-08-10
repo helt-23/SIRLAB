@@ -1,0 +1,53 @@
+{
+  "compilerOptions": {
+    // --- Configuração do Ambiente e Módulos ---
+    // Target: Define a versão do JavaScript que o código será compilado. 'ESNext' usa a mais recente.
+    // Vite cuidará da compatibilidade com navegadores mais antigos durante o build.
+    "target": "esnext", 
+    // Lib: Bibliotecas de tipos que o TypeScript deve incluir na compilação. Essencial para DOM e features modernas.
+    "lib": ["dom", "dom.iterable", "esnext"],
+    // Module: Especifica o sistema de módulos. 'ESNext' é o padrão para Vite.
+    "module": "esnext",
+    // ModuleResolution: Como o TypeScript resolve os módulos. 'Bundler' é a opção moderna recomendada pelo Vite.
+    "moduleResolution": "bundler",
+
+    // --- Configuração do React (JSX) ---
+    // Jsx: Habilita o novo JSX Transform do React 17+, que não exige 'import React from "react"' em todo arquivo.
+    "jsx": "react-jsx", 
+    
+    // --- Rigor e Qualidade do Código (MUITO IMPORTANTE) ---
+    // Strict: Habilita todas as checagens de tipo rigorosas. A configuração mais importante para um código seguro.
+    "strict": true,
+    // NoUnusedLocals: Avisa sobre variáveis locais que foram declaradas mas não usadas. Ajuda a manter o código limpo.
+    "noUnusedLocals": true,
+    // NoUnusedParameters: Avisa sobre parâmetros de função não utilizados.
+    "noUnusedParameters": true,
+    // NoFallthroughCasesInSwitch: Evita erros comuns em `switch` statements onde um `break` é esquecido.
+    "noFallthroughCasesInSwitch": true,
+
+    // --- Integração com o Ecossistema ---
+    // EsModuleInterop: Melhora a compatibilidade ao importar módulos CommonJS, facilitando o uso de bibliotecas mais antigas.
+    "esModuleInterop": true,
+    // ResolveJsonModule: Permite importar arquivos .json como módulos.
+    "resolveJsonModule": true,
+    // IsolatedModules: Garante que cada arquivo possa ser transpilado de forma isolada, como o Vite faz. É um pré-requisito de segurança.
+    "isolatedModules": true,
+    // Types: Especifica quais pacotes de tipos devem ser incluídos globalmente. 'vite/client' é essencial para 'import.meta.env'.
+    "types": ["vite/client"],
+
+    // --- Otimização e Compilação ---
+    // NoEmit: Impede o TypeScript de gerar arquivos .js. Apenas checa os tipos. O Vite é quem faz a compilação final.
+    "noEmit": true, 
+    // SkipLibCheck: Pula a checagem de tipos dos arquivos de declaração (.d.ts) de bibliotecas em node_modules. Acelera a compilação.
+    "skipLibCheck": true 
+  },
+  "include": [
+    "src/**/*",                        /* Inclui todos os arquivos na pasta 'src'. */
+    "index.ts",                        /* Inclui o arquivo index.ts na raiz (se aplicável). */
+    "*.js"                             /* Inclui todos os arquivos .js na raiz. */
+  ],
+  "exclude": [
+    "node_modules",                    /* Exclui a pasta node_modules. */
+    "dist"                             /* Exclui a pasta de saída. */
+  ]
+}
