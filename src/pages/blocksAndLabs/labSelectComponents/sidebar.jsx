@@ -1,7 +1,11 @@
 import { Building } from "lucide-react";
+import {useBlocoManager} from "../../../features/bloco/useBloco"
 import "../styles/sidebar.css";
 
-export function Sidebar({ blocos, blocoSelecionado, setBlocoSelecionado }) {
+export function Sidebar({ blocoSelecionado, setBlocoSelecionado }) {
+  const useBloco = useBlocoManager()
+  const blocos = useBloco.blocos
+
   return (
     <aside className="sidebar">
       <h2 className="sidebar-header">
@@ -20,7 +24,7 @@ export function Sidebar({ blocos, blocoSelecionado, setBlocoSelecionado }) {
                 onClick={() => setBlocoSelecionado(bloco.id)}
               >
                 <Building className="icon" />
-                {bloco.nome}
+                {bloco.descricao}
               </button>
             </li>
           ))}
