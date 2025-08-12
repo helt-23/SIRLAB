@@ -1,5 +1,5 @@
 import apiBackend from "./api/apiBackend";
-import { ResponseLaboratorioType, RequestLaboratorioType } from "../features/laboratorio/types/";
+import { ResponseLaboratorioType, RequestLaboratorioType, ResponseLaboratorioDetalhadoType } from "../features/laboratorio/types/";
 
 export const LaboratorioServices = {
     async listarTodosLaboratorios(status: boolean, blocoId?: number): Promise<ResponseLaboratorioType[]> {
@@ -9,6 +9,11 @@ export const LaboratorioServices = {
                 blocoId: blocoId
             }
         })
+        return response.data
+    },
+
+    async listarLaboratorioDetalhado(labId: number): Promise<ResponseLaboratorioDetalhadoType>{
+        const response = await apiBackend.get(`/laboratorio/${labId}`)
         return response.data
     },
 

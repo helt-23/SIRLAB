@@ -5,6 +5,7 @@ import { useLabData } from "../../context/LabDataContext";
 import { useSchedule } from "../../customHooks/useSchedule";
 import { useWeekManager } from "../../customHooks/useWeekManeger";
 import { useReservation } from "../../customHooks/useReservation";
+import { useLaboratorioManager } from "../../features/laboratorio/useLaboratorio"
 import LabScheduleView from "./labScheduleView";
 
 export function LabScheduleManager() {
@@ -12,6 +13,10 @@ export function LabScheduleManager() {
   const [currentShift, setCurrentShift] = useState("manhã");
   const [currentWeek, setCurrentWeek] = useState(0);
   const [showDetail, setShowDetail] = useState(false);
+  
+  const useLaboratorio = useLaboratorioManager()
+  const dadosLaboratorio = useLaboratorio.laboratorioDetalhado
+  console.log(dadosLaboratorio)
 
   const {
     getLabDetails,
@@ -21,7 +26,11 @@ export function LabScheduleManager() {
   } = useLabData();
 
   const labDetails = useMemo(
-    () => getLabDetails(labId),
+    () => {
+      getLabDetails(labId)
+      useLaboratorio.setLabId(labId)
+
+    },
     [labId, getLabDetails]
   );
   const scheduleData = useMemo(
@@ -75,7 +84,7 @@ export function LabScheduleManager() {
 
   return (
     <LabScheduleView
-      labDetails={labDetails}
+      labDetails={dadosLaboratorio?.laboratorio}
       showDetail={showDetail}
       setShowDetail={setShowDetail}
       currentShift={currentShift}
@@ -85,7 +94,7 @@ export function LabScheduleManager() {
       scheduleData={scheduleData}
       diasSemana={diasSemana}
       horariosUnicos={horariosUnicos}
-      horarios={horarios}
+      horarios={dadosLaboratorio?.horarios}
       onCellClick={handleCellClick}
       reservation={reservation}
     />

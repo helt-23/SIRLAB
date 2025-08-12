@@ -13,7 +13,7 @@ export function LabInfoCard({ labDetails, setShowDetail, showDetail }) {
             <div className="lab-info-card__details-item">
               <Users size={16} className="icon" />
               <div>
-                <strong>{labDetails.lugares} lugares</strong>
+                <strong>{labDetails.capacidade} lugares</strong>
                 <span>Capacidade total</span>
               </div>
             </div>
@@ -21,7 +21,7 @@ export function LabInfoCard({ labDetails, setShowDetail, showDetail }) {
             <div className="lab-info-card__details-item">
               <Clock size={16} className="icon" />
               <div>
-                <strong>Sala {labDetails.sala}</strong>
+                <strong>Sala {labDetails.localizacao}</strong>
                 <span>Localização</span>
               </div>
             </div>

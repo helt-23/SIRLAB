@@ -1,3 +1,5 @@
+import { ResponseHorarioType } from "../../horario/types"
+
 export type ResponseLaboratorioType = {
     id: number,
     descricao: string,
@@ -8,4 +10,9 @@ export type ResponseLaboratorioType = {
     observacao: string,
     bloco: string,
     blocoId: number
+}
+
+export type ResponseLaboratorioDetalhadoType = {
+    laboratorio: ResponseLaboratorioType,
+    horarios: [ResponseHorarioType]
 }

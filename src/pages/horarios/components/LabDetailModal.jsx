@@ -21,7 +21,7 @@ export function LabDetailModal({ isOpen, onClose, labDetails }) {
         </button>
 
         <div className="modal-header">
-          <h2 className="modal__title">{labDetails.nome || "Laboratório"}</h2>
+          <h2 className="modal__title">{labDetails.descricao || "Laboratório"}</h2>
           <div className="lab-status-container">
             <span
               className={`lab-status ${
