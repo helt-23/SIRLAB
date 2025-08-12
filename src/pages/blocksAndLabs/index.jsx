@@ -4,14 +4,21 @@ import { Breadcrumb } from "../../components";
 import { useLabData } from "../../context/LabDataContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import { LabsGridSection, Sidebar, WelcomeScreen } from "./labSelectComponents";
+import { useLaboratorioManager} from "../../features/laboratorio/useLaboratorio"
+import {useBlocoManager} from "../../features/bloco/useBloco"
 import "./styles/global.css";
 
 export function LabSelection() {
-  const { blocos, laboratorios, getLabSchedule } = useLabData();
+  const { getLabSchedule } = useLabData();
   const [blocoSelecionado, setBlocoSelecionado] = useState(null);
   const navigate = useNavigate();
   const location = useLocation();
 
+  const useLaboratorio = useLaboratorioManager()
+  const laboratorio = useLaboratorio.laboratorios
+
+  const useBloco = useBlocoManager()
+  const bloco = useBloco.blocos
   // Resetar seleção quando o breadcrumb for clicado
   useEffect(() => {
     if (location.state?.resetSelection) {
@@ -19,13 +26,13 @@ export function LabSelection() {
     }
   }, [location.state]);
 
-  const blocoAtual = blocoSelecionado
-    ? blocos.find((b) => b.id === blocoSelecionado)
-    : null;
+  useEffect(() => {
+    useLaboratorio.setBlocoId(blocoAtual?.id)
+  }, [blocoSelecionado])
 
-  const labsDoBloco = blocoAtual
-    ? blocoAtual.laboratorios.map((labId) => laboratorios[labId])
-    : [];
+  const blocoAtual = blocoSelecionado
+    ? bloco.find((b) => b.id === blocoSelecionado)
+    : null;
 
   const handleVerHorarios = (labId) => {
     getLabSchedule(labId);
@@ -36,7 +43,7 @@ export function LabSelection() {
     <div className="app-container">
       <main className="main-content-lab">
         <Sidebar
-          blocos={blocos}
+          blocos={bloco}
           blocoSelecionado={blocoSelecionado}
           setBlocoSelecionado={setBlocoSelecionado}
         />
@@ -48,9 +55,9 @@ export function LabSelection() {
             onChange={(e) => setBlocoSelecionado(e.target.value || null)}
           >
             <option value="">Selecione um bloco</option>
-            {blocos.map((bloco) => (
+            {bloco.map((bloco) => (
               <option key={bloco.id} value={bloco.id}>
-                {bloco.nome}
+                {bloco.descricao}
               </option>
             ))}
           </select>
@@ -62,7 +69,7 @@ export function LabSelection() {
           ) : (
             <LabsGridSection
               blocoAtual={blocoAtual}
-              labsDoBloco={labsDoBloco}
+              labsDoBloco={laboratorio}
               handleVerHorarios={handleVerHorarios}
             />
           )}

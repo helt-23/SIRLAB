@@ -2,9 +2,7 @@ import { Building } from "lucide-react";
 import {useBlocoManager} from "../../../features/bloco/useBloco"
 import "../styles/sidebar.css";
 
-export function Sidebar({ blocoSelecionado, setBlocoSelecionado }) {
-  const useBloco = useBlocoManager()
-  const blocos = useBloco.blocos
+export function Sidebar({ blocos, blocoSelecionado, setBlocoSelecionado }) {
 
   return (
     <aside className="sidebar">

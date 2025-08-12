@@ -4,10 +4,10 @@ import type { RequestLaboratorioType } from "./types";
 
 const QUERY_KEY = 'laboratorio'
 
-export function useGetLaboratorios(status: boolean){
+export function useGetLaboratorios(status: boolean, blocoId?: number){
     return useQuery({
-        queryKey: [QUERY_KEY, status],
-        queryFn: () => LaboratorioServices.listarTodosLaboratorios(status),
+        queryKey: [QUERY_KEY, status, blocoId],
+        queryFn: () => LaboratorioServices.listarTodosLaboratorios(status, blocoId),
     })
 }
 

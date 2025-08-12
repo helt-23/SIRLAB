@@ -8,7 +8,7 @@ export function LaboratoryCard({ lab, handleVerHorarios }) {
         {lab.image ? (
           <img
             src={lab.image}
-            alt={lab.sala || lab.descricao}
+            alt={lab.localizacap || lab.descricao}
             className="lab-card-image"
           />
         ) : (
@@ -17,7 +17,7 @@ export function LaboratoryCard({ lab, handleVerHorarios }) {
           </div>
         )}
         <div className="lab-card-image-overlay">
-          <h3 className="lab-card-title">{lab.sala || lab.descricao}</h3>
+          <h3 className="lab-card-title">{lab.localizacao || lab.descricao}</h3>
         </div>
       </div>
 
@@ -26,11 +26,11 @@ export function LaboratoryCard({ lab, handleVerHorarios }) {
         <div className="lab-card-details-content">
           <div className="lab-card-detail-row">
             <Users className="lab-card-icon" />
-            <span>{lab.lugares} lugares disponíveis</span>
+            <span>{lab.capacidade} lugares disponíveis</span>
           </div>
 
           <p className="lab-card-description">
-            {lab.descricao || lab.detalhe || "Laboratório sem descrição"}
+            {lab.descricao || lab.observacao || "Laboratório sem descrição"}
           </p>
         </div>
 

@@ -1,16 +1,13 @@
 import { LaboratoryCard } from "./laboratoryCard";
-import {LaboratorioServices} from "../../../services/laboratorio.services"
-import { useLaboratorioManager} from "../../../features/laboratorio/useLaboratorio"
 
 export function LabsGridSection({blocoAtual, labsDoBloco, handleVerHorarios})
 {
-  const useLaboratorio = useLaboratorioManager()
-  const laboratorios = useLaboratorio.laboratorios
+  
   return (
     <>
-      <h3 className="section-title">Laboratórios em {blocoAtual?.nome}</h3>
+      <h3 className="section-title">Laboratórios em {blocoAtual?.descricao}</h3>
       <div className="labs-grid">
-        {laboratorios.map((lab) => (
+        {labsDoBloco.map((lab) => (
           <div className="card-container" key={lab.id}>
             <LaboratoryCard
               lab={{

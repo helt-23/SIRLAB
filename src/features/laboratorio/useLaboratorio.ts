@@ -8,13 +8,15 @@ import {
 
 export function useLaboratorioManager(){
     const [status, setStatus] = useState(true)
+    const [blocoId, setBlocoId] = useState()
 
-    const {data: laboratorios = [], isLoading, isError, error} = useGetLaboratorios(status)
+    const {data: laboratorios = [], isLoading, isError, error} = useGetLaboratorios(status, blocoId)
     const {mutate: cadastrarLaboratorio, isPending: isCreating} = useCreateLaboratorio()
     const {mutate: atualizarLaboratorio, isPending: isUpdating} = useUpdateLaboratorio()
     const {mutate: inativarLaboratorio, isPending: isDeleting} = useInactivateLaboratorio()
 
     const loading = isCreating || isUpdating || isDeleting
+    console.log(blocoId)
     return {
         laboratorios,
         status,
@@ -22,11 +24,13 @@ export function useLaboratorioManager(){
         loading,
         isError,
         error,
+        blocoId,
 
         //Ações
         setStatus,
         cadastrarLaboratorio,
         atualizarLaboratorio,
-        inativarLaboratorio
+        inativarLaboratorio,
+        setBlocoId
     }
 }

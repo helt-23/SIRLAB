@@ -2,10 +2,11 @@ import apiBackend from "./api/apiBackend";
 import { ResponseLaboratorioType, RequestLaboratorioType } from "../features/laboratorio/types/";
 
 export const LaboratorioServices = {
-    async listarTodosLaboratorios(status: boolean): Promise<ResponseLaboratorioType[]> {
+    async listarTodosLaboratorios(status: boolean, blocoId?: number): Promise<ResponseLaboratorioType[]> {
         const response = await apiBackend.get('/laboratorio/', {
             params: {
-                isAtivo: status
+                isAtivo: status,
+                blocoId: blocoId
             }
         })
         return response.data
