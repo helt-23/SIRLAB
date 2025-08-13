@@ -1,46 +1,50 @@
 // src/services/labService.js
-import Imagem from '../assets/images/lab24.jpeg';
+import Imagem from "../assets/images/lab24.jpeg";
 
 export const getBlocos = () => [
   {
-    id: 'bloco-a',
-    nome: 'Bloco 1',
-    laboratorios: ['lab-24', 'lab-102', 'lab-103', 'lab-104']
+    id: "bloco-a",
+    nome: "Bloco 1",
+    laboratorios: ["lab-24", "lab-102", "lab-103", "lab-104"],
   },
   {
-    id: 'bloco-b',
-    nome: 'Bloco 2',
-    laboratorios: ['lab-201', 'lab-202', 'lab-203']
-  }
+    id: "bloco-b",
+    nome: "Bloco 2",
+    laboratorios: ["lab-201", "lab-202", "lab-203"],
+  },
 ];
 export const getLaboratorios = () => ({
-  'lab-24': {
-    id: 'lab-24',
-    blocoId: 'bloco-a',
+  "lab-24": {
+    id: "lab-24",
+    blocoId: "bloco-a",
     sala: "Sala 24 - Bloco 1",
     lugares: 25,
     descricao: "Laboratório de Análise e Desenvolvimento de Software",
     detalhe: "Os computadores estão ligando pelo menos.",
     image: Imagem,
     hardwares: [
-      { nome: "Desktops Dell", quantidade: 20, especificacao: "Intel i7 6500U, SSD 240GB, 16GB RAM, geforce 950mx" },
+      {
+        nome: "Desktops Dell",
+        quantidade: 20,
+        especificacao: "Intel i7 6500U, SSD 240GB, 16GB RAM, geforce 950mx",
+      },
     ],
     softwares: [
       { nome: "MATLAB", versao: "2023b", licenca: "Desconhecido" },
       { nome: "Visual Studio Code", versao: "2023", licenca: "Desconhecido" },
       { nome: "Unity", versao: "2025", licenca: "Floating" },
       { nome: "AutoCad", versao: "2023.2", licenca: "Academic" },
-      { nome: "IntelliJ", versao: "2024", licenca: "Desconhecido" }
+      { nome: "IntelliJ", versao: "2024", licenca: "Desconhecido" },
     ],
     responsavel: {
       nome: "Prof. Marcela Alves",
       email: "marcela.alves@unifesspa.edu.br",
-      telefone: "(xx) xxxxx-xxxx"
-    }
+      telefone: "(xx) xxxxx-xxxx",
+    },
   },
-  'lab-102': {
-    id: 'lab-102',
-    blocoId: 'bloco-a',
+  "lab-102": {
+    id: "lab-102",
+    blocoId: "bloco-a",
     sala: "Sala 102 - Bloco 1",
     lugares: 30,
     descricao: "Laboratório de Eletrônica",
@@ -50,12 +54,12 @@ export const getLaboratorios = () => ({
     responsavel: {
       nome: "Prof. Responsável Genérico",
       email: "responsavel.generico@unifesspa.edu.br",
-      telefone: "(xx) xxxxx-xxxx"
-    }
+      telefone: "(xx) xxxxx-xxxx",
+    },
   },
-  'lab-201': {
-    id: 'lab-201',
-    blocoId: 'bloco-b',
+  "lab-201": {
+    id: "lab-201",
+    blocoId: "bloco-b",
     sala: "Sala 201 - Bloco B",
     lugares: 20,
     descricao: "Laboratório de Química",
@@ -65,69 +69,81 @@ export const getLaboratorios = () => ({
     responsavel: {
       nome: "Prof. Responsável Genérico",
       email: "responsavel.generico@unifesspa.edu.br",
-      telefone: "(xx) xxxxx-xxxx"
-    }
+      telefone: "(xx) xxxxx-xxxx",
+    },
   },
-  'lab-103': {
-    id: 'lab-103',
-    blocoId: 'bloco-a',
+  "lab-103": {
+    id: "lab-103",
+    blocoId: "bloco-a",
     sala: "Sala 103 - Bloco 1",
     lugares: 20,
     descricao: "Laboratório de Redes",
     detalhe: "Equipado com roteadores e switches para práticas de configuração",
     hardwares: [
       { nome: "Roteadores Cisco", quantidade: 8, especificacao: "Modelo 2901" },
-      { nome: "Switches Layer 3", quantidade: 6, especificacao: "Cisco Catalyst 3560" }
+      {
+        nome: "Switches Layer 3",
+        quantidade: 6,
+        especificacao: "Cisco Catalyst 3560",
+      },
     ],
     softwares: [
-      { nome: "Cisco Packet Tracer", versao: "8.2", licenca: "Educacional" }
+      { nome: "Cisco Packet Tracer", versao: "8.2", licenca: "Educacional" },
     ],
     responsavel: {
       nome: "Prof. Carlos Silva",
       email: "carlos.silva@unifesspa.edu.br",
-      telefone: "(94) 98765-4321"
-    }
+      telefone: "(94) 98765-4321",
+    },
   },
-  'lab-104': {
-    id: 'lab-104',
-    blocoId: 'bloco-a',
+  "lab-104": {
+    id: "lab-104",
+    blocoId: "bloco-a",
     sala: "Sala 104 - Bloco 1",
     lugares: 18,
     descricao: "Laboratório de Hardware",
     detalhe: "Bancadas para montagem e manutenção de computadores",
     image: Imagem,
     hardwares: [
-      { nome: "Kits de Ferramentas", quantidade: 12, especificacao: "Chaves de precisão" },
-      { nome: "Fontes ATX", quantidade: 15, especificacao: "500W 80 Plus" }
+      {
+        nome: "Kits de Ferramentas",
+        quantidade: 12,
+        especificacao: "Chaves de precisão",
+      },
+      { nome: "Fontes ATX", quantidade: 15, especificacao: "500W 80 Plus" },
     ],
     softwares: [],
     responsavel: {
       nome: "Prof. Renato Oliveira",
       email: "renato.oliveira@unifesspa.edu.br",
-      telefone: "(94) 99876-5432"
-    }
+      telefone: "(94) 99876-5432",
+    },
   },
-  'lab-202': {
-    id: 'lab-202',
-    blocoId: 'bloco-b',
+  "lab-202": {
+    id: "lab-202",
+    blocoId: "bloco-b",
     sala: "Sala 202 - Bloco 2",
     lugares: 22,
     descricao: "Laboratório de Física",
     detalhe: "Equipamentos para experimentos de mecânica e termodinâmica",
     image: Imagem,
     hardwares: [
-      { nome: "Kits de Óptica", quantidade: 10, especificacao: "Lentes e prismas" }
+      {
+        nome: "Kits de Óptica",
+        quantidade: 10,
+        especificacao: "Lentes e prismas",
+      },
     ],
     softwares: [],
     responsavel: {
       nome: "Prof. Ana Beatriz",
       email: "ana.beatriz@unifesspa.edu.br",
-      telefone: "(94) 98765-1234"
-    }
+      telefone: "(94) 98765-1234",
+    },
   },
-  'lab-203': {
-    id: 'lab-203',
-    blocoId: 'bloco-b',
+  "lab-203": {
+    id: "lab-203",
+    blocoId: "bloco-b",
     sala: "Sala 203 - Bloco 2",
     lugares: 25,
     descricao: "Laboratório de Química Orgânica",
@@ -138,18 +154,229 @@ export const getLaboratorios = () => ({
     responsavel: {
       nome: "Prof. Fábio Lima",
       email: "fabio.lima@unifesspa.edu.br",
-      telefone: "(94) 99234-5678"
-    }
+      telefone: "(94) 99234-5678",
+    },
   },
 });
 
+export const getHorarios = (labId, startDate, endDate) => {
+  return [
+    {
+      data: "2025-08-18",
+      diaSemana: "SEGUNDA",
+      horarioFim: "08:20:00",
+      horarioInicio: "07:30:00",
+      id: 43,
+      isDisponivel: false,
+      reserva: {
+        caminhoPdf: "documentos/reserva123.pdf",
+        descricao: "Aula JC",
+        id: 12,
+        laboratorioDescricao: "Laboratório de quimica2",
+        statusReserva: "ANALISE",
+        tipoReserva: "AULA",
+        usuarioNome: "Gabriel",
+      },
+    },
+    {
+      data: "2025-08-18",
+      diaSemana: "SEGUNDA",
+      horarioFim: "09:10:00",
+      horarioInicio: "08:20:00",
+      id: 44,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-18",
+      diaSemana: "SEGUNDA",
+      horarioFim: "10:00:00",
+      horarioInicio: "09:10:00",
+      id: 45,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-19",
+      diaSemana: "TERÇA",
+      horarioFim: "08:20:00",
+      horarioInicio: "07:30:00",
+      id: 46,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-19",
+      diaSemana: "TERÇA",
+      horarioFim: "09:10:00",
+      horarioInicio: "08:20:00",
+      id: 47,
+      isDisponivel: false,
+      reserva: {
+        caminhoPdf: "documentos/reserva124.pdf",
+        descricao: "Reunião de equipe",
+        id: 13,
+        laboratorioDescricao: "Laboratório de quimica2",
+        statusReserva: "APROVADA",
+        tipoReserva: "REUNIAO",
+        usuarioNome: "Ana",
+      },
+    },
+    {
+      data: "2025-08-19",
+      diaSemana: "TERÇA",
+      horarioFim: "10:00:00",
+      horarioInicio: "09:10:00",
+      id: 48,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-20",
+      diaSemana: "QUARTA",
+      horarioFim: "08:20:00",
+      horarioInicio: "07:30:00",
+      id: 49,
+      isDisponivel: false,
+      reserva: {
+        caminhoPdf: "documentos/reserva125.pdf",
+        descricao: "Aula JC",
+        id: 14,
+        laboratorioDescricao: "Laboratório de quimica2",
+        statusReserva: "ANALISE",
+        tipoReserva: "AULA",
+        usuarioNome: "Gabriel",
+      },
+    },
+    {
+      data: "2025-08-20",
+      diaSemana: "QUARTA",
+      horarioFim: "09:10:00",
+      horarioInicio: "08:20:00",
+      id: 50,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-20",
+      diaSemana: "QUARTA",
+      horarioFim: "10:00:00",
+      horarioInicio: "09:10:00",
+      id: 51,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-21",
+      diaSemana: "QUINTA",
+      horarioFim: "08:20:00",
+      horarioInicio: "07:30:00",
+      id: 52,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-21",
+      diaSemana: "QUINTA",
+      horarioFim: "09:10:00",
+      horarioInicio: "08:20:00",
+      id: 53,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-21",
+      diaSemana: "QUINTA",
+      horarioFim: "10:00:00",
+      horarioInicio: "09:10:00",
+      id: 54,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-22",
+      diaSemana: "SEXTA",
+      horarioFim: "08:20:00",
+      horarioInicio: "07:30:00",
+      id: 55,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-22",
+      diaSemana: "SEXTA",
+      horarioFim: "09:10:00",
+      horarioInicio: "08:20:00",
+      id: 56,
+      isDisponivel: false,
+      reserva: {
+        caminhoPdf: "documentos/reserva126.pdf",
+        descricao: "Workshop de Programação",
+        id: 15,
+        laboratorioDescricao: "Laboratório de quimica2",
+        statusReserva: "CONCLUIDA",
+        tipoReserva: "EVENTO",
+        usuarioNome: "Carlos",
+      },
+    },
+    {
+      data: "2025-08-22",
+      diaSemana: "SEXTA",
+      horarioFim: "10:00:00",
+      horarioInicio: "09:10:00",
+      id: 57,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-23",
+      diaSemana: "SABADO",
+      horarioFim: "08:20:00",
+      horarioInicio: "07:30:00",
+      id: 58,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-23",
+      diaSemana: "SABADO",
+      horarioFim: "09:10:00",
+      horarioInicio: "08:20:00",
+      id: 59,
+      isDisponivel: true,
+      reserva: null,
+    },
+    {
+      data: "2025-08-23",
+      diaSemana: "SABADO",
+      horarioFim: "10:00:00",
+      horarioInicio: "09:10:00",
+      id: 60,
+      isDisponivel: true,
+      reserva: null,
+    },
+  ];
+};
+
 export const getSchedules = () => ({
-  'lab-24': {
+  "lab-24": {
     diasSemana: ["Seg", "Ter", "Qua", "Qui", "Sex", "Sab"],
     shifts: {
-      manhã: ["07:00 - 07:50", "08:00 - 08:50", "09:00 - 09:50", "10:00 - 10:50", "11:00 - 11:50"],
-      tarde: ["13:00 - 13:50", "14:00 - 14:50", "15:00 - 15:50", "16:00 - 16:50", "17:00 - 17:50"],
-      noite: ["19:00 - 19:50", "20:00 - 20:50", "21:00 - 21:50"]
+      manhã: [
+        "07:00 - 07:50",
+        "08:00 - 08:50",
+        "09:00 - 09:50",
+        "10:00 - 10:50",
+        "11:00 - 11:50",
+      ],
+      tarde: [
+        "13:00 - 13:50",
+        "14:00 - 14:50",
+        "15:00 - 15:50",
+        "16:00 - 16:50",
+        "17:00 - 17:50",
+      ],
+      noite: ["19:00 - 19:50", "20:00 - 20:50", "21:00 - 21:50"],
     },
     aulas: [
       {
@@ -157,44 +384,44 @@ export const getSchedules = () => ({
         horario: "07:00 - 07:50",
         materia: "IHC",
         professor: "Prof. Marcela",
-        turma: "CC 2023"
+        turma: "CC 2023",
       },
       {
         dia: "Seg",
         horario: "08:00 - 08:50",
         materia: "IHC",
         professor: "Prof. Marcela",
-        turma: "CC 2023"
+        turma: "CC 2023",
       },
       {
         dia: "Seg",
         horario: "09:00 - 09:50",
         materia: "IHC",
         professor: "Prof. Marcela",
-        turma: "2025.2"
+        turma: "2025.2",
       },
       {
         dia: "Seg",
         horario: "10:00 - 10:50",
         materia: "IHC",
         professor: "Prof. Marcela",
-        turma: "CC 2025.2"
+        turma: "CC 2025.2",
       },
       {
         dia: "Sex",
         horario: "14:00 - 14:50",
         materia: "Redes",
         professor: "Prof. Pedro",
-        turma: "CC 2023"
-      }
-    ]
+        turma: "CC 2023",
+      },
+    ],
   },
 });
 
 export const getUserBookings = () => [
   {
     id: 1,
-    labId: 'lab-24',
+    labId: "lab-24",
     status: "pendente",
     labSala: "Sala 24 - Bloco 1",
     requestDate: "2024-05-28T14:30:00",
@@ -203,11 +430,11 @@ export const getUserBookings = () => [
     endTime: "07:50",
     dia: "Qua",
     horario: "07:00 - 07:50",
-    usuario: { nome: "Usuário", matricula: "2023001" }
+    usuario: { nome: "Usuário", matricula: "2023001" },
   },
   {
     id: 2,
-    labId: 'lab-24',
+    labId: "lab-24",
     status: "Confirmada",
     labSala: "Sala 24 - Bloco 1",
     requestDate: "2024-05-25T10:15:00",
@@ -216,11 +443,11 @@ export const getUserBookings = () => [
     endTime: "15:50",
     dia: "Seg",
     horario: "14:00 - 15:50",
-    usuario: { nome: "Usuário", matricula: "2023001" }
+    usuario: { nome: "Usuário", matricula: "2023001" },
   },
   {
     id: 3,
-    labId: 'lab-102',
+    labId: "lab-102",
     status: "Negada",
     labSala: "Sala 102 - Bloco 1",
     requestDate: "2024-05-20T09:00:00",
@@ -229,22 +456,22 @@ export const getUserBookings = () => [
     endTime: "21:50",
     dia: "Sex",
     horario: "19:00 - 21:50",
-    usuario: { nome: "João Silva", matricula: "2023001" }
-  }
+    usuario: { nome: "João Silva", matricula: "2023001" },
+  },
 ];
 
 export const getAllBookings = () => {
   return [
     // Reservas do usuário (convertidas para o formato padrão)
-    ...getUserBookings().map(booking => ({
+    ...getUserBookings().map((booking) => ({
       ...booking,
-      status: booking.status.toLowerCase().replace("confirmada", "confirmado")
+      status: booking.status.toLowerCase().replace("confirmada", "confirmado"),
     })),
 
     // Reservas de outros usuários
     {
       id: 100,
-      labId: 'lab-24',
+      labId: "lab-24",
       status: "confirmado",
       labSala: "Sala 24 - Bloco 1",
       requestDate: "2024-05-01T08:00:00",
@@ -253,11 +480,11 @@ export const getAllBookings = () => {
       endTime: "08:50",
       dia: "Seg",
       horario: "08:00 - 08:50",
-      usuario: { nome: "Maria Oliveira", matricula: "2023002" }
+      usuario: { nome: "Maria Oliveira", matricula: "2023002" },
     },
     {
       id: 101,
-      labId: 'lab-24',
+      labId: "lab-24",
       status: "confirmado",
       labSala: "Sala 24 - Bloco 1",
       requestDate: "2024-05-01T09:00:00",
@@ -266,11 +493,11 @@ export const getAllBookings = () => {
       endTime: "09:50",
       dia: "Seg",
       horario: "09:00 - 09:50",
-      usuario: { nome: "Carlos Santos", matricula: "2023003" }
+      usuario: { nome: "Carlos Santos", matricula: "2023003" },
     },
     {
       id: 102,
-      labId: 'lab-24',
+      labId: "lab-24",
       status: "confirmado",
       labSala: "Sala 24 - Bloco 1",
       requestDate: "2024-05-02T10:00:00",
@@ -279,11 +506,11 @@ export const getAllBookings = () => {
       endTime: "10:50",
       dia: "Ter",
       horario: "10:00 - 10:50",
-      usuario: { nome: "Ana Costa", matricula: "2023004" }
+      usuario: { nome: "Ana Costa", matricula: "2023004" },
     },
     {
       id: 103,
-      labId: 'lab-24',
+      labId: "lab-24",
       status: "confirmado",
       labSala: "Sala 24 - Bloco 1",
       requestDate: "2024-05-03T14:00:00",
@@ -292,11 +519,11 @@ export const getAllBookings = () => {
       endTime: "15:50",
       dia: "Qua",
       horario: "14:00 - 15:50",
-      usuario: { nome: "Pedro Almeida", matricula: "2023005" }
+      usuario: { nome: "Pedro Almeida", matricula: "2023005" },
     },
     {
       id: 104,
-      labId: 'lab-102',
+      labId: "lab-102",
       status: "confirmado",
       labSala: "Sala 102 - Bloco 1",
       requestDate: "2024-05-04T15:00:00",
@@ -305,11 +532,11 @@ export const getAllBookings = () => {
       endTime: "16:50",
       dia: "Qui",
       horario: "15:00 - 16:50",
-      usuario: { nome: "Juliana Pereira", matricula: "2023006" }
+      usuario: { nome: "Juliana Pereira", matricula: "2023006" },
     },
     {
       id: 105,
-      labId: 'lab-201',
+      labId: "lab-201",
       status: "confirmado",
       labSala: "Sala 201 - Bloco B",
       requestDate: "2024-05-05T19:00:00",
@@ -318,11 +545,11 @@ export const getAllBookings = () => {
       endTime: "20:50",
       dia: "Sex",
       horario: "19:00 - 20:50",
-      usuario: { nome: "Fernando Costa", matricula: "2023007" }
+      usuario: { nome: "Fernando Costa", matricula: "2023007" },
     },
     {
       id: 106,
-      labId: 'lab-24',
+      labId: "lab-24",
       status: "pendente",
       labSala: "Sala 24 - Bloco 1",
       requestDate: "2024-05-06T10:00:00",
@@ -331,11 +558,11 @@ export const getAllBookings = () => {
       endTime: "11:50",
       dia: "Sab",
       horario: "10:00 - 11:50",
-      usuario: { nome: "Roberto Silva", matricula: "2023008" }
+      usuario: { nome: "Roberto Silva", matricula: "2023008" },
     },
     {
       id: 107,
-      labId: 'lab-302',
+      labId: "lab-302",
       status: "pendente",
       labSala: "Sala 302 - Bloco C",
       requestDate: "2024-05-07T11:00:00",
@@ -344,7 +571,7 @@ export const getAllBookings = () => {
       endTime: "12:50",
       dia: "Dom",
       horario: "11:00 - 12:50",
-      usuario: { nome: "Camila Oliveira", matricula: "2023009" }
-    }
+      usuario: { nome: "Camila Oliveira", matricula: "2023009" },
+    },
   ];
 };

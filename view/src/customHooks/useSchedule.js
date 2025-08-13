@@ -1,114 +1,169 @@
 // src/customHooks/useSchedule.js
 import { useMemo } from "react";
 
-// Extrai um par { start, end } de uma string “HH:mm - HH:mm”
-export const extractTimeRange = (time) => {
-  if (!time) return { start: "", end: "" };
-  const [start, end] = time.split(" - ");
-  return { start, end };
+// Funções auxiliares
+const getShift = (startTime) => {
+  const hour = parseInt(startTime.split(":")[0]);
+  if (hour >= 6 && hour < 12) return "manhã";
+  if (hour >= 12 && hour < 18) return "tarde";
+  return "noite";
 };
 
-/**
- * useSchedule:
- * @param {Object} scheduleData - { diasSemana: [...], shifts: {manhã: [...], tarde:[...], noite:[...]}, aulas: [...] }
- * @param {string} currentShift - turno atual (ex: "manhã", "tarde", "noite")
- * @param {Array} labBookings - lista de reservas (filtrada para aquele laboratório)
- *
- * Retorna: { diasSemana, horariosUnicos, horarios }, onde:
- *  - diasSemana: ex: ["Seg","Ter","Qua","Qui","Sex","Sab"]
- *  - horariosUnicos: array de strings de horários daquele turno (ex: ["13:00 - 13:50", "14:00 - 14:50", ...])
- *  - horarios: array de objetos, um para cada combinação (turno × dia), com campos:
- *      {
- *        horaInicio: "14:00",
- *        horaFim: "14:50",
- *        diaSemana: "Seg",
- *        tipo: "aula" | "reservado" | "livre",
- *        dados: objeto de aula ou reserva (ou null),
- *        horario: "14:00 - 14:50",
- *        isUserBooking: boolean (true se for reserva do próprio usuário)
- *      }
- */
-export const useSchedule = (scheduleData, currentShift, labBookings) => {
-  // Dias da semana para este laboratório
-  const diasSemana = useMemo(
-    () => scheduleData?.diasSemana || [],
-    [scheduleData]
-  );
+const formatTime = (time) => time.slice(0, 5);
 
-  // Horários de cada "slot" para o turno selecionado
-  const horariosUnicos = useMemo(
-    () => scheduleData?.shifts?.[currentShift] || [],
-    [scheduleData, currentShift]
-  );
+const createTimeSlot = (start, end) =>
+  `${formatTime(start)} - ${formatTime(end)}`;
 
-  // Filtra apenas reservas confirmadas
-  const reservasConfirmadas = useMemo(() => {
-    return (
-      labBookings?.filter(
-        (booking) =>
-          booking.status && booking.status.toLowerCase() === "confirmado"
-      ) || []
+// Normaliza nomes de dias
+const normalizeDia = (dia) =>
+  dia
+    .toLowerCase()
+    .replace("ç", "c")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+// Converte para formato abreviado
+const abbreviateDia = (dia) => {
+  const diasMap = {
+    segunda: "Seg",
+    terca: "Ter",
+    quarta: "Qua",
+    quinta: "Qui",
+    sexta: "Sex",
+    sabado: "Sab",
+    domingo: "Dom",
+  };
+  return diasMap[dia] || dia;
+};
+
+export const useSchedule = (
+  horarios,
+  currentShift,
+  backendMode = false,
+  allBookings = []
+) => {
+  // 1. Processar entrada baseada no modo
+  const processedHorarios = useMemo(() => {
+    if (!horarios) return [];
+
+    if (backendMode) {
+      // Converter estrutura backend para formato mock
+      return horarios.flatMap((horario) => ({
+        data: horario.data,
+        diaSemana: horario.diaSemana,
+        horarioInicio: horario.horarioInicio,
+        horarioFim: horario.horarioFim,
+        id: horario.id,
+        isDisponivel: horario.isDisponivel,
+        reserva: horario.reserva,
+      }));
+    }
+
+    return horarios;
+  }, [horarios, backendMode]);
+
+  // 2. Filtrar horários pelo turno
+  const filteredHorarios = useMemo(() => {
+    return processedHorarios.filter(
+      (item) => getShift(item.horarioInicio) === currentShift
     );
-  }, [labBookings]);
+  }, [processedHorarios, currentShift]);
 
-  // Monta a lista completa de células
-  const horarios = useMemo(() => {
-    if (!scheduleData || !horariosUnicos.length) return [];
+  // 3. Processar dias da semana
+  const diasSemana = useMemo(() => {
+    const normalizedDias = filteredHorarios.map((item) =>
+      normalizeDia(item.diaSemana)
+    );
 
-    return horariosUnicos.flatMap((timeSlot) => {
-      // timeSlot é uma string tipo "14:00 - 14:50"
-      const { start: slotStart, end: slotEnd } = extractTimeRange(timeSlot);
+    const dayOrder = [
+      "segunda",
+      "terca",
+      "quarta",
+      "quinta",
+      "sexta",
+      "sabado",
+      "domingo",
+    ];
 
-      return diasSemana.map((dia) => {
-        // 1) Verifica se existe 'aula' cadastrada para este dia/hora
-        const aula = scheduleData.aulas?.find(
-          (a) => a.dia === dia && a.horario === timeSlot
-        );
-        if (aula) {
+    return [...new Set(normalizedDias)]
+      .sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b))
+      .map(abbreviateDia);
+  }, [filteredHorarios]);
+
+  // 4. Criar slots de horário únicos
+  const uniqueTimeSlots = useMemo(() => {
+    const slots = filteredHorarios.map((item) =>
+      createTimeSlot(item.horarioInicio, item.horarioFim)
+    );
+
+    return [...new Set(slots)].sort((a, b) =>
+      a.split(" - ")[0].localeCompare(b.split(" - ")[0])
+    );
+  }, [filteredHorarios]);
+
+  // 5. Montar grade de horários
+  const scheduleGrid = useMemo(() => {
+    return uniqueTimeSlots.flatMap((slot) =>
+      diasSemana
+        .map((dia) => {
+          const fullDayName = {
+            Seg: "segunda",
+            Ter: "terca",
+            Qua: "quarta",
+            Qui: "quinta",
+            Sex: "sexta",
+            Sab: "sabado",
+            Dom: "domingo",
+          }[dia];
+
+          const scheduleItem = filteredHorarios.find(
+            (item) =>
+              normalizeDia(item.diaSemana) === fullDayName &&
+              createTimeSlot(item.horarioInicio, item.horarioFim) === slot
+          );
+
+          if (!scheduleItem) return null;
+
+          let scheduleType;
+          if (!scheduleItem.isDisponivel) {
+            scheduleType =
+              scheduleItem.reserva?.tipoReserva === "AULA"
+                ? "aula"
+                : "reservado";
+          } else {
+            scheduleType = "livre";
+          }
+
+          // Verificar se é reserva do usuário (backend)
+          let isUserBooking = false;
+          if (backendMode && scheduleItem.reserva) {
+            isUserBooking = allBookings.some(
+              (b) =>
+                b.id === scheduleItem.reserva.id &&
+                b.usuario?.matricula === "2023001"
+            );
+          } else {
+            isUserBooking = scheduleItem.reserva?.usuarioNome === "Gabriel";
+          }
+
           return {
-            horaInicio: slotStart,
-            horaFim: slotEnd,
+            horaInicio: formatTime(scheduleItem.horarioInicio),
+            horaFim: formatTime(scheduleItem.horarioFim),
             diaSemana: dia,
-            tipo: "aula",
-            dados: aula,
-            horario: timeSlot,
-          };
-        }
-
-        // 2) Verifica se existe alguma reserva (overlap) CONFIRMADA para este dia/hora
-        const reserva = reservasConfirmadas?.find((r) => {
-          if (r.dia !== dia) return false;
-          // Extrai início e fim da reserva
-          const { start: resStart, end: resEnd } = extractTimeRange(r.horario);
-          // Verifica se slot está totalmente dentro do intervalo [resStart, resEnd]
-          return slotStart >= resStart && slotEnd <= resEnd;
-        });
-
-        if (reserva) {
-          const isUserBooking = reserva.usuario?.matricula === "2023001";
-          return {
-            horaInicio: slotStart,
-            horaFim: slotEnd,
-            diaSemana: dia,
-            tipo: "reservado",
-            dados: reserva,
-            horario: timeSlot,
+            tipo: scheduleType,
+            dados: scheduleItem.reserva,
+            horario: slot,
             isUserBooking,
+            horarioId: scheduleItem.id,
           };
-        }
+        })
+        .filter(Boolean)
+    );
+  }, [filteredHorarios, diasSemana, uniqueTimeSlots, backendMode, allBookings]);
 
-        // 3) Se não for aula nem reserva → "livre"
-        return {
-          horaInicio: slotStart,
-          horaFim: slotEnd,
-          diaSemana: dia,
-          tipo: "livre",
-          dados: null,
-          horario: timeSlot,
-        };
-      });
-    });
-  }, [scheduleData, diasSemana, horariosUnicos, reservasConfirmadas]);
-
-  return { diasSemana, horariosUnicos, horarios };
+  return {
+    diasSemana,
+    horariosUnicos: uniqueTimeSlots,
+    horarios: scheduleGrid,
+  };
 };

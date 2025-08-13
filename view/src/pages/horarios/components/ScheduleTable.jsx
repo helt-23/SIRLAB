@@ -1,3 +1,4 @@
+// src/pages/labSchedulePage/components/ScheduleTable.jsx
 export function ScheduleTable({
   diasSemana,
   horariosUnicos,
@@ -42,8 +43,12 @@ export function ScheduleTable({
       case "aula":
         return (
           <div className="cell-content">
-            <div className="cell-title">{horario.dados.materia}</div>
-            <div className="cell-subtitle">{horario.dados.professor}</div>
+            <div className="cell-title">
+              {horario.dados?.descricao || "Aula"}
+            </div>
+            <div className="cell-subtitle">
+              {horario.dados?.usuarioNome || "Professor"}
+            </div>
           </div>
         );
 
@@ -53,7 +58,9 @@ export function ScheduleTable({
             <div className="cell-title">
               {horario.isUserBooking ? "Sua Reserva" : "Reservado"}
             </div>
-            <div className="cell-subtitle">{horario.dados.usuario.nome}</div>
+            <div className="cell-subtitle">
+              {horario.dados?.usuarioNome || "Usuário"}
+            </div>
           </div>
         );
 
@@ -84,9 +91,7 @@ export function ScheduleTable({
               <td>{time}</td>
               {diasSemana.map((dia) => {
                 const horario = horarios.find(
-                  (h) =>
-                    h.diaSemana === dia &&
-                    `${h.horaInicio} - ${h.horaFim}` === time
+                  (h) => h.diaSemana === dia && h.horario === time
                 );
 
                 if (!horario) return <td key={`${time}-${dia}`}></td>;

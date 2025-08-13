@@ -1,67 +1,54 @@
+// src/customHooks/useWeekManager.js
 import { useMemo } from "react";
 
-export const useWeekManager = (currentWeek) => {
-  // Calcular datas da semana
+// Função para obter a data de uma segunda-feira a partir de uma semana relativa
+const getMonday = (weekOffset = 0) => {
+  const today = new Date();
+  const day = today.getDay(); // 0 (domingo) a 6 (sábado)
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Ajuste para segunda-feira
+  const monday = new Date(today.setDate(diff + 7 * weekOffset));
+  return monday;
+};
+
+export const useWeekManager = (currentWeek = 0) => {
+  const diasDaSemana = [
+    "segunda",
+    "terça",
+    "quarta",
+    "quinta",
+    "sexta",
+    "sábado",
+    "domingo",
+  ];
+
+  const monday = useMemo(() => getMonday(currentWeek), [currentWeek]);
+
   const weekDates = useMemo(() => {
-    const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 (domingo) a 6 (sábado)
-    const diffToMonday = dayOfWeek === 0 ? -6 : 1 - dayOfWeek;
-    const monday = new Date(today);
-    monday.setDate(today.getDate() + diffToMonday + currentWeek * 7);
-
-    // Garante que a data é válida
-    if (isNaN(monday.getTime())) {
-      console.error("Data inválida calculada, usando data atual");
-      return Array(5)
-        .fill()
-        .map((_, i) => new Date(today.getTime() + i * 86400000));
+    const dates = [];
+    const date = new Date(monday);
+    for (let i = 0; i < 7; i++) {
+      const currentDate = new Date(date);
+      dates.push(currentDate.toISOString().split("T")[0]); // Formato YYYY-MM-DD
+      date.setDate(date.getDate() + 1);
     }
+    return dates;
+  }, [monday]);
 
-    return Array.from({ length: 5 }, (_, i) => {
-      const date = new Date(monday);
-      date.setDate(monday.getDate() + i);
-      return date;
-    });
-  }, [currentWeek]);
-
-  // Mapeamento de dias para datas
-  const dayToDateMap = useMemo(() => {
-    const days = ["segunda", "terça", "quarta", "quinta", "sexta"];
-    return days.reduce((map, day, index) => {
-      map[day] = weekDates[index];
-      return map;
-    }, {});
-  }, [weekDates]);
-
-  // Obter data para um dia específico
-  const getDateForDay = (day) => {
-    return dayToDateMap[day] || new Date();
+  const getDateForDay = (dia) => {
+    const index = diasDaSemana.indexOf(dia.toLowerCase());
+    if (index === -1) return null;
+    const date = new Date(monday);
+    date.setDate(date.getDate() + index);
+    return date.toISOString().split("T")[0];
   };
 
-  // Formatar datas para exibição
-  const formatWeekDisplay = useMemo(() => {
-    if (weekDates.length === 0) return "";
-
-    const format = (date) => {
-      return date
-        .toLocaleDateString("pt-BR", {
-          day: "2-digit",
-          month: "short",
-        })
-        .replace(".", "")
-        .toLowerCase();
-    };
-
-    const start = format(weekDates[0]);
-    const end = format(weekDates[4]);
-
-    return `${start} - ${end}`;
-  }, [weekDates]);
+  const startDate = weekDates[0];
+  const endDate = weekDates[6];
 
   return {
     weekDates,
-    dayToDateMap,
+    startDate,
+    endDate,
     getDateForDay,
-    formatWeekDisplay,
   };
 };
