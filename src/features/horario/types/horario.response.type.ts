@@ -5,7 +5,7 @@ export type ResponseHorarioType = {
     data: string,
     horarioInicio: string,
     horarioFim: string,
-    diaSemana: string,
+    diaSemana: "SEGUNDA" | "TERCA" | "QUARTA" | "QUINTA" | "SEXTA" | "SABADO" | "DOMINGO",
     statusHorario: string,
     isDisponivel: boolean,
     reserva: ResponseReservaType

@@ -1,3 +1,4 @@
+// src/pages/labSchedulePage/LabScheduleView.jsx
 import { Breadcrumb } from "../../components";
 import LabInfoCard from "./components/LabInfoCard";
 import ScheduleControls from "./scheduleManage";
@@ -13,7 +14,6 @@ export default function LabScheduleView({
   setCurrentShift,
   currentWeek,
   setCurrentWeek,
-  scheduleData,
   diasSemana,
   horariosUnicos,
   horarios,
@@ -32,7 +32,6 @@ export default function LabScheduleView({
           />
 
           <ScheduleControls
-            scheduleData={scheduleData}
             currentShift={currentShift}
             setCurrentShift={setCurrentShift}
             currentWeek={currentWeek}
@@ -52,28 +51,18 @@ export default function LabScheduleView({
         </div>
 
         <ReservationModal
-          isOpen={reservation.reservationModal.open}
-          onClose={reservation.closeReservationModal}
-          day={reservation.reservationModal.day}
-          date={reservation.reservationModal.date}
-          timeSlots={reservation.reservationModal.timeSlots}
-          labDetails={reservation.reservationModal.labDetails}
-          selectedSlots={reservation.selectedSlots}
-          handleSlotChange={reservation.handleSlotChange}
-          reservationType={reservation.reservationType}
-          setReservationType={reservation.setReservationType}
-          description={reservation.description}
-          setDescription={reservation.setDescription}
-          file={reservation.file}
-          handleFileChange={reservation.handleFileChange}
-          formErrors={reservation.formErrors}
-          reservationTypes={reservation.reservationTypes}
-          validateForm={reservation.validateForm}
-          showConfirmation={reservation.showConfirmation}
-          setShowConfirmation={reservation.setShowConfirmation}
-          handleConfirmReservation={reservation.handleConfirmReservation}
-          reservationSuccess={reservation.reservationSuccess}
-          setReservationSuccess={reservation.setReservationSuccess}
+          isOpen={reservation.isModalOpen}
+          onClose={reservation.closeModal}
+          selectedDay={reservation.selectedDay}
+          selectedDate={reservation.selectedDate}
+          availableSlots={reservation.availableSlots}
+          selectedSlot={reservation.selectedSlot}
+          reservationDetails={reservation.reservationDetails}
+          isSuccess={reservation.isSuccess}
+          onSlotSelect={reservation.handleSlotSelect}
+          onInputChange={reservation.handleInputChange}
+          onFileChange={reservation.handleFileChange}
+          onSubmit={reservation.submitReservation}
         />
 
         <LabDetailModal
