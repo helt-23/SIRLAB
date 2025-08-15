@@ -4,6 +4,7 @@ import {
   LoginSignForm,
   LabSelection,
   HomePage,
+  AdmPage
 } from "../pages";
 
 export default function AppRoutes() {
@@ -32,6 +33,14 @@ export default function AppRoutes() {
         handle={{
           title: "Agendamento",
           breadcrumbTitle: "Agendar Horário",
+        }}
+      />
+       <Route
+        path="/administracao"
+        element={<AdmPage />}
+        handle={{
+          title: "administracao",
+          breadcrumbTitle: "umahora a gente descobre",
         }}
       />
     </Routes>

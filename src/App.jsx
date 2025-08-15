@@ -10,14 +10,15 @@ function Layout() {
   const location = useLocation();
   const isLoginPage = location.pathname === "/login";
   const isHomePage = location.pathname === "/";
+  const isAdm = location.pathname === "/administracao";
 
   return (
     <>
-      {!isHomePage && !isLoginPage && <Header />}
+      {!isAdm && !isHomePage && !isLoginPage && <Header />}
       <main>
         <AppRoutes />
       </main>
-      {!isLoginPage && <Footer />}
+      { !isAdm && !isLoginPage && <Footer />}
     </>
   );
 }

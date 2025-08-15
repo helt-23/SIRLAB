@@ -174,6 +174,7 @@ export const useReservation = (labId, addUserBooking) => {
 
   return {
     // Estados
+     isModalOpen: reservationModal.open,
     reservationModal,
     selectedSlots,
     reservationType,

@@ -51,19 +51,27 @@ export default function LabScheduleView({
         </div>
 
         <ReservationModal
-          isOpen={reservation.isModalOpen}
-          onClose={reservation.closeModal}
-          selectedDay={reservation.selectedDay}
-          selectedDate={reservation.selectedDate}
-          availableSlots={reservation.availableSlots}
-          selectedSlot={reservation.selectedSlot}
-          reservationDetails={reservation.reservationDetails}
-          isSuccess={reservation.isSuccess}
-          onSlotSelect={reservation.handleSlotSelect}
-          onInputChange={reservation.handleInputChange}
-          onFileChange={reservation.handleFileChange}
-          onSubmit={reservation.submitReservation}
-        />
+  isOpen={reservation.isModalOpen}
+  onClose={reservation.closeReservationModal}
+  selectedDay={reservation.reservationModal.day}
+  selectedDate={reservation.reservationModal.date}
+  availableSlots={reservation.reservationModal.timeSlots}
+  selectedSlots={reservation.selectedSlots}
+  handleSlotChange={reservation.handleSlotChange}
+  reservationType={reservation.reservationType}
+  setReservationType={reservation.setReservationType}
+  description={reservation.description}
+  setDescription={reservation.setDescription}
+  file={reservation.file}
+  handleFileChange={reservation.handleFileChange}
+  formErrors={reservation.formErrors || {}} 
+  reservationTypes={reservation.reservationTypes}
+  validateForm={reservation.validateForm}
+  showConfirmation={reservation.showConfirmation}
+  setShowConfirmation={reservation.setShowConfirmation}
+  handleConfirmReservation={reservation.handleConfirmReservation}
+  reservationSuccess={reservation.reservationSuccess}
+/>
 
         <LabDetailModal
           isOpen={showDetail}
