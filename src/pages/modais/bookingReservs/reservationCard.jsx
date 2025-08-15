@@ -2,27 +2,28 @@ import { Trash2 } from "lucide-react";
 
 // OBSERVAÇÃO, PRECISAMOS QUE APAREÇA O BLOCO E QUAL É O LABORATÓRIO NO CARD, DA FORMA QUE ESTÁ AGORA, ELE SÓ ESTÁ MOSTRANDO O BLOCO
 export const ReservationCard = ({ booking, onRemoveClick }) => {
-  const labSala = booking.labSala || "Laboratório Desconhecido";
+  console.log(booking)
+  const labSala = booking.laboratorioDescricao || "Laboratório Desconhecido";
   const labParts = labSala.split("-");
   const labCode = labParts.length > 0 ? labParts[0].trim() : "";
   const labName = labParts.length > 1 ? labParts[1].trim() : labSala;
 
-  const requestDate = booking.requestDate
-    ? new Date(booking.requestDate)
+  const requestDate = booking.dataSolicitacao
+    ? new Date(booking.dataSolicitacao)
     : null;
 
   const bookingDate = booking.bookingDate
     ? new Date(booking.bookingDate)
     : null;
 
-  // Status válidos: Pendente, Negada, Confirmada
-  const isValidStatus = ["Pendente", "Negada", "Confirmada"].includes(
-    booking.status
+  // Status válidos: ESPERA, Negada, CONFIRMADO
+  const isValidStatus = ["ESPERA", "NEGADO", "CONFIRMADO"].includes(
+    booking.statusReserva
   );
-  const status = isValidStatus ? booking.status : "Pendente";
+  const status = isValidStatus ? booking.statusReserva : "ESPERA";
 
-  // Só permite cancelar reservas Pendentes
-  const canCancel = status === "Pendente";
+  // Só permite cancelar reservas ESPERAs
+  const canCancel = status === "ESPERA";
 
   return (
     <div className="reservation-card">
@@ -31,6 +32,10 @@ export const ReservationCard = ({ booking, onRemoveClick }) => {
           {labCode && <span className="lab-code">{labCode}</span>}
           {labName}
         </h3>
+      </div>
+
+      <div className="reservation-detail">
+        <strong>Descrição:</strong> {booking.descricao || "Sem descrição"}
       </div>
 
       <div className="reservation-details">

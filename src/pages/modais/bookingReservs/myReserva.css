@@ -208,17 +208,17 @@
   display: inline-block;
 }
 
-.status-badge.confirmada {
+.status-badge.confirmado {
   background: rgba(59, 130, 246, 0.1);
   color: var(--confirm);
 }
 
-.status-badge.negada {
+.status-badge.negado {
   background: rgba(217, 48, 37, 0.1);
   color: var(--denied);
 }
 
-.status-badge.pendente {
+.status-badge.espera {
   background: rgba(249, 171, 0, 0.1);
   color: var(--pending);
 }

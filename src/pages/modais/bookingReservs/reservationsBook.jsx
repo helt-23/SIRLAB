@@ -3,15 +3,17 @@ import { useLabData } from "../../../context/LabDataContext";
 import { X } from "lucide-react";
 import ConfirmationDialog from "../../../components/ConfirmationDialog ";
 import { ReservationCard } from "./reservationCard";
+import {useReservaManager} from "../../../features/reserva/useReserva"
 import "./myReserva.css";
 
 export function BookingReservs() {
   const {
     isBookingsModalOpen,
     closeBookingsModal,
-    userBookings,
     removeUserBooking,
   } = useLabData();
+  const useReserva = useReservaManager()
+  const reservas = useReserva.reservas
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [bookingToRemove, setBookingToRemove] = useState(null);
@@ -39,13 +41,13 @@ export function BookingReservs() {
             <h1 className="reservations-title">Minhas Reservas</h1>
           </header>
 
-          {userBookings.length === 0 ? (
+          {reservas.length === 0 ? (
             <div className="div-semReserva">
               <h3>Você não possui reservas</h3>
             </div>
           ) : (
             <section className="reservation-list">
-              {userBookings.map((booking) => (
+              {reservas.map((booking) => (
                 <ReservationCard
                   key={booking.id}
                   booking={booking}
