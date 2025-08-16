@@ -11,10 +11,11 @@ export function useGetLaboratorios(status: boolean, blocoId?: number){
     })
 }
 
-export function useGetLaboratorioDetalhado(labId: number){
+export function useGetLaboratorioDetalhado(labId?: number){
     return useQuery({
         queryKey: [QUERY_KEY, labId],
-        queryFn: () => LaboratorioServices.listarLaboratorioDetalhado(labId)
+        queryFn: () => LaboratorioServices.listarLaboratorioDetalhado(labId),
+        enabled: labId != undefined
     })
 }
 

@@ -2,7 +2,7 @@ import { useState, useMemo } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { SectionWrapper, DeleteButton } from '../components';
 
-const AtribuirHorariosPage = ({ laboratorios, blocos, tiposPadrao, horarios, setHorarios }) => {
+const AtribuirHorariosPage = ({ laboratorios, blocos, tiposPadrao, horarios, cadastrarHorarios }) => {
   const [blocoFiltro, setBlocoFiltro] = useState('');
   const [buscaLab, setBuscaLab] = useState('');
   const [horarioForm, setHorarioForm] = useState({ 
@@ -11,6 +11,7 @@ const AtribuirHorariosPage = ({ laboratorios, blocos, tiposPadrao, horarios, set
     laboratorioId: '', 
     tipoPadraoHorarioId: '' 
   });
+
 
   const laboratoriosFiltrados = useMemo(() => {
     return laboratorios
@@ -25,14 +26,13 @@ const AtribuirHorariosPage = ({ laboratorios, blocos, tiposPadrao, horarios, set
       return; 
     }
     
-    const novoHorario = { 
-      id: Date.now(), 
+    const novosHorarios = { 
       ...horarioForm, 
       laboratorioId: parseInt(horarioForm.laboratorioId, 10), 
       tipoPadraoHorarioId: parseInt(horarioForm.tipoPadraoHorarioId, 10) 
     };
     
-    setHorarios([...horarios, novoHorario]);
+    cadastrarHorarios(novosHorarios)
     setHorarioForm({ 
       dataInicio: '', 
       dataFim: '', 
@@ -142,7 +142,7 @@ const AtribuirHorariosPage = ({ laboratorios, blocos, tiposPadrao, horarios, set
               {horarios.map(h => {
                 const lab = laboratorios.find(l => l.id === h.laboratorioId);
                 const tipo = tiposPadrao.find(t => t.id === h.tipoPadraoHorarioId);
-                
+    
                 return (
                   <li 
                     key={h.id} 

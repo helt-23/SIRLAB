@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { SectionWrapper, DeleteButton } from '../components';
 import {LabForm} from '../forms';
 
-const GerenciarLabsPage = ({ laboratorios, setLaboratorios, blocos }) => {
+const GerenciarLabsPage = ({ laboratorios, criarLaboratorio, inativarLaboratorio, blocos }) => {
   const [formState, setFormState] = useState({ 
     descricao: '', 
     sigla: '', 
@@ -25,7 +25,6 @@ const GerenciarLabsPage = ({ laboratorios, setLaboratorios, blocos }) => {
     }
     
     const novoLab = { 
-      id: Date.now(),
       descricao: formState.descricao.trim(),
       sigla: formState.sigla.trim(),
       capacidade: parseInt(formState.capacidade, 10) || 0,
@@ -34,7 +33,7 @@ const GerenciarLabsPage = ({ laboratorios, setLaboratorios, blocos }) => {
       blocoId: parseInt(formState.blocoId, 10)
     };
     
-    setLaboratorios([...laboratorios, novoLab]);
+    criarLaboratorio(novoLab)
     setFormState({ 
       descricao: '', 
       sigla: '', 
@@ -46,7 +45,7 @@ const GerenciarLabsPage = ({ laboratorios, setLaboratorios, blocos }) => {
   };
 
   const handleDelete = (id) => {
-    setLaboratorios(laboratorios.filter(lab => lab.id !== id));
+    inativarLaboratorio(id)
   };
 
   return (

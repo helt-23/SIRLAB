@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { PlusCircle } from 'lucide-react';
 import { SectionWrapper, DeleteButton } from '../components';
 
-const ConfigurarPadroesPage = ({ tiposPadrao, setTiposPadrao, padroesHorario, setPadroesHorario }) => {
+const ConfigurarPadroesPage = ({ tiposPadrao, criarTipoPadraoHorario, deletarTipoPadraoHorario, padroesHorario, criarPadraoHorario, deletarPadraoHorario }) => {
   const diasSemana = ["Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado", "Domingo"];
   const [tipoDescricao, setTipoDescricao] = useState('');
   const [padraoForm, setPadraoForm] = useState({ 
@@ -15,8 +15,8 @@ const ConfigurarPadroesPage = ({ tiposPadrao, setTiposPadrao, padroesHorario, se
   const handleAddTipo = (e) => {
     e.preventDefault();
     if (!tipoDescricao.trim()) return;
-    const novoTipo = { id: Date.now(), descricao: tipoDescricao.trim() };
-    setTiposPadrao([...tiposPadrao, novoTipo]);
+    const novoTipo = { descricao: tipoDescricao.trim() };
+    criarTipoPadraoHorario(novoTipo)
     setTipoDescricao('');
   };
 
@@ -28,13 +28,12 @@ const ConfigurarPadroesPage = ({ tiposPadrao, setTiposPadrao, padroesHorario, se
     }
     
     const novoPadrao = { 
-      id: Date.now(), 
       ...padraoForm, 
       diaSemana: parseInt(padraoForm.diaSemana, 10), 
       tipoPadraoHorarioId: parseInt(padraoForm.tipoPadraoHorarioId, 10) 
     };
     
-    setPadroesHorario([...padroesHorario, novoPadrao]);
+    criarPadraoHorario(novoPadrao)
     setPadraoForm({ 
       diaSemana: '0', 
       horarioInicio: '', 
@@ -81,7 +80,7 @@ const ConfigurarPadroesPage = ({ tiposPadrao, setTiposPadrao, padroesHorario, se
                 >
                   <span>{t.descricao}</span>
                   <DeleteButton 
-                    onClick={() => setTiposPadrao(tiposPadrao.filter(i => i.id !== t.id))} 
+                    onClick={() => deletarTipoPadraoHorario(t.id)} 
                     label={`Remover tipo ${t.descricao}`}
                   />
                 </li>
@@ -172,10 +171,10 @@ const ConfigurarPadroesPage = ({ tiposPadrao, setTiposPadrao, padroesHorario, se
                     className="flex justify-between items-center p-3 bg-white rounded-md border text-sm"
                   >
                     <span>
-                      <strong>{tipo?.descricao || 'Tipo desconhecido'}:</strong> {diasSemana[p.diaSemana]}, {p.horarioInicio} - {p.horarioFim}
+                      <strong>{p?.tipoPadrao || 'Tipo desconhecido'}:</strong> {p.diaSemana}, {p.horarioInicio} - {p.horarioFim}
                     </span>
                     <DeleteButton 
-                      onClick={() => setPadroesHorario(padroesHorario.filter(i => i.id !== p.id))} 
+                      onClick={() => deletarPadraoHorario(p.id)} 
                       label="Remover padrão de horário"
                     />
                   </li>

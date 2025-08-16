@@ -1,0 +1,6 @@
+export {useBlocoManager} from "./bloco/useBloco"
+export {useHorarioManager} from "./horario/useHorario"
+export {useLaboratorioManager} from "./laboratorio/useLaboratorio"
+export {useReservaManager} from "./reserva/useReserva"
+export {usePadraoHorarioManager} from "./padraoHorario/usePadraoHorario"
+export {useTipoPadraoHorarioManager} from "./tipoPadraoHorario/usePadraoHorario"

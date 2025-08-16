@@ -2,19 +2,19 @@ import { useState } from 'react';
 import { SectionWrapper, DeleteButton } from '../components';
 import {BlockForm} from '../forms';
 
-const GerenciarBlocosPage = ({ blocos, setBlocos }) => {
+const GerenciarBlocosPage = ({ blocos, criarBloco, inativarBloco }) => {
   const [descricao, setDescricao] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!descricao.trim()) return;
-    const novoBloco = { id: Date.now(), descricao: descricao.trim() };
-    setBlocos([...blocos, novoBloco]);
+    const novoBloco = { descricao: descricao.trim() };
+    criarBloco(novoBloco)
     setDescricao('');
   };
 
   const handleDelete = (id) => {
-    setBlocos(blocos.filter(bloco => bloco.id !== id));
+    inativarBloco(id)
   };
 
   return (

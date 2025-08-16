@@ -1,30 +1,21 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Header, Footer, Sidebar, PageComponent } from './components';
 import { Dashboard, GerenciarBlocosPage, GerenciarLabsPage, VisualizarHorariosPage, ConfigurarPadroesPage, AtribuirHorariosPage} from "./page"
-
+import {useBlocoManager, useLaboratorioManager, useReservaManager, usePadraoHorarioManager, useTipoPadraoHorarioManager, useHorarioManager} from '../../features'
 export function AdmPage () {
   const [currentPage, setCurrentPage] = useState('main');
   const userName = "Administrador";
+  
+  const useReserva = useReservaManager()
+  
+  const { blocos, isBlocosLoading, cadastrarBloco, atualizarBloco, inativarBloco } = useBlocoManager();
+  const { laboratorios, isLabsLoading, setBlocoId, cadastrarLaboratorio, inativarLaboratorio} = useLaboratorioManager();
+  const { tipoPadraoHorario, isLoading, cadastrarTipoPadraoHorario, deletarTipoPadraoHorario} = useTipoPadraoHorarioManager();
+  const { padroesHorario, isLoadingPadrao, cadastrarPadraoHorario, deletarPadraoHorario} = usePadraoHorarioManager();
+  const { cadastrarHorarios, deletarHorarios, loading} = useHorarioManager();
+  //setBlocoId()
+  
 
-  const [blocos, setBlocos] = useState([
-    { id: 1, descricao: 'Bloco A - Principal' }, 
-    { id: 2, descricao: 'Bloco B - Anexo' }
-  ]);
-  
-  const [laboratorios, setLaboratorios] = useState([
-    { id: 101, descricao: 'Lab de Química 101', sigla: 'LQI101', capacidade: 20, localizacao: 'Sala 1', observacao: '', blocoId: 1 },
-    { id: 102, descricao: 'Lab de Biologia 102', sigla: 'LBI102', capacidade: 25, localizacao: 'Sala 2', observacao: '', blocoId: 1 },
-    { id: 201, descricao: 'Lab de Física 201', sigla: 'LFI201', capacidade: 15, localizacao: 'Sala 1', observacao: '', blocoId: 2 }
-  ]);
-  
-  const [tiposPadrao, setTiposPadrao] = useState([
-    { id: 1, descricao: 'Aulas de 50 min' }, 
-    { id: 2, descricao: 'Aulas de 1h 40min' }
-  ]);
-  
-  const [padroesHorario, setPadroesHorario] = useState([
-    { id: 1, diaSemana: 0, horarioInicio: '08:00', horarioFim: '08:50', tipoPadraoHorarioId: 1 }
-  ]);
   
   const [horarios, setHorarios] = useState([
     { id: 1, dataInicio: '2025-08-01', dataFim: '2025-12-15', laboratorioId: 101, tipoPadraoHorarioId: 1 }
@@ -40,23 +31,25 @@ export function AdmPage () {
   const renderPageView = () => {
     const pages = {
       'Visualizar Horários': <VisualizarHorariosPage blocos={blocos} laboratorios={laboratorios} />,
-      'Gerenciar Blocos': <GerenciarBlocosPage blocos={blocos} setBlocos={setBlocos} />,
-      'Gerenciar Laboratórios': <GerenciarLabsPage laboratorios={laboratorios} setLaboratorios={setLaboratorios} blocos={blocos} />,
+      'Gerenciar Blocos': <GerenciarBlocosPage blocos={blocos} criarBloco = {cadastrarBloco} inativarBloco = {inativarBloco}/>,
+      'Gerenciar Laboratórios': <GerenciarLabsPage laboratorios={laboratorios} blocos={blocos} criarLaboratorio = {cadastrarLaboratorio} inativarLaboratorio = {inativarLaboratorio}/>,
       'Configurar Padrões': (
         <ConfigurarPadroesPage 
-          tiposPadrao={tiposPadrao} 
-          setTiposPadrao={setTiposPadrao} 
+          tiposPadrao={tipoPadraoHorario} 
+          criarTipoPadraoHorario={cadastrarTipoPadraoHorario} 
+          deletarTipoPadraoHorario={deletarTipoPadraoHorario}
           padroesHorario={padroesHorario} 
-          setPadroesHorario={setPadroesHorario} 
+          criarPadraoHorario = {cadastrarPadraoHorario}
+          deletarPadraoHorario={deletarPadraoHorario}
         />
       ),
       'Atribuir Horários': (
         <AtribuirHorariosPage 
           laboratorios={laboratorios} 
           blocos={blocos} 
-          tiposPadrao={tiposPadrao} 
+          tiposPadrao={tipoPadraoHorario} 
           horarios={horarios} 
-          setHorarios={setHorarios} 
+          cadastrarHorarios={cadastrarHorarios}
         />
       )
     };

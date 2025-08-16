@@ -33,6 +33,7 @@ export function LabScheduleManager() {
     [labId, getLabDetails]
   );
 
+  //console.log(dadosLaboratorio)
   // Gerenciamento de semana
   const { startDate, endDate, getDateForDay } = useWeekManager(currentWeek);
 

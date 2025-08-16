@@ -1,9 +1,12 @@
-export type RequestHorarioType = {
-    "id": 50,
-    "data": "2025-08-27",
-    "horarioInicio": "07:30:00",
-    "horarioFim": "08:20:00",
-    "diaSemana": "QUARTA",
-    "statusHorario": "ESPERA",
-    "isDisponivel": false,
+export type RequestAlteraHorarioType = {
+    dataInicio: string,
+    dataFim: string,
+    laboratorioId: number
+}
+
+export type RequestCadastroHorarioType = {
+    dataInicio: string,
+    dataFim: string,
+    laboratorioId: number,
+    tipoPadraoHorarioId: number
 }

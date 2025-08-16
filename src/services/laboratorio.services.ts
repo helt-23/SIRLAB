@@ -12,7 +12,7 @@ export const LaboratorioServices = {
         return response.data
     },
 
-    async listarLaboratorioDetalhado(labId: number): Promise<ResponseLaboratorioDetalhadoType>{
+    async listarLaboratorioDetalhado(labId?: number): Promise<ResponseLaboratorioDetalhadoType>{
         const response = await apiBackend.get(`/laboratorio/${labId}`)
         return response.data
     },
