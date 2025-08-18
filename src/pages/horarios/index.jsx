@@ -1,13 +1,11 @@
 // src/pages/labSchedulePage/LabScheduleManager.jsx
-import { useState, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useLabData } from "../../context/LabDataContext";
 import { useSchedule } from "../../customHooks/useSchedule";
-import { useWeekManager } from "../../customHooks/useWeekManeger.js";
+import { useWeekManager } from "../../customHooks/useWeekManeger";
 import { useReservation } from "../../customHooks/useReservation";
-import { useLaboratorioManager } from "../../features/laboratorio/useLaboratorio"
+import { useLaboratorioManager } from "../../features/laboratorio/useLaboratorio";
 import LabScheduleView from "./labScheduleView";
-import "./app.css";
 
 export function LabScheduleManager() {
   const { labId } = useParams();
@@ -15,59 +13,49 @@ export function LabScheduleManager() {
   const [currentWeek, setCurrentWeek] = useState(0);
   const [showDetail, setShowDetail] = useState(false);
   
-  const useLaboratorio = useLaboratorioManager()
-  const dadosLaboratorio = useLaboratorio.laboratorioDetalhado
+  const laboratorioManager = useLaboratorioManager();
+  
+  // Carrega detalhes do laboratório
+  useEffect(() => {
+    if (labId) {
+      laboratorioManager.setLabId(labId);
+    }
+  }, [labId, laboratorioManager]);
 
-  const {
-    getLabDetails,
-    getHorariosForLab, // Nova função
-    addUserBooking,
-  } = useLabData();
-
-  const labDetails = useMemo(
-    () => {
-      getLabDetails(labId)
-      useLaboratorio.setLabId(labId)
-
-    },
-    [labId, getLabDetails]
-  );
-
-  //console.log(dadosLaboratorio)
-  // Gerenciamento de semana
-  const { startDate, endDate, getDateForDay } = useWeekManager(currentWeek);
-
-  // Busca os horários do laboratório para a semana atual
-  const horarios = useMemo(() => {
-    return getHorariosForLab(labId, startDate, endDate);
-  }, [labId, startDate, endDate, getHorariosForLab]);
+  const { getDateForDay } = useWeekManager(currentWeek);
+  const dadosLaboratorio = laboratorioManager.laboratorioDetalhado;
+  
   // Processa os horários para exibição
   const {
     diasSemana,
     horariosUnicos,
     horarios: gradeHorarios,
-  } = useSchedule(dadosLaboratorio?.horarios, currentShift);
+  } = useSchedule(dadosLaboratorio?.horarios || [], currentShift);
 
-  const reservation = useReservation(labId, addUserBooking);
+  const reservation = useReservation(labId);
 
   const handleCellClick = (dia) => {
-    const diaNormalizado =
-      {
-        Seg: "segunda",
-        Ter: "terça",
-        Qua: "quarta",
-        Qui: "quinta",
-        Sex: "sexta",
-        Sab: "sábado",
-        Dom: "domingo",
-      }[dia] || dia;
+    const diaNormalizado = {
+      Seg: "segunda",
+      Ter: "terça",
+      Qua: "quarta",
+      Qui: "quinta",
+      Sex: "sexta",
+      Sab: "sábado",
+      Dom: "domingo",
+    }[dia] || dia;
 
     const dateForDay = getDateForDay(diaNormalizado);
-    const daySlots = gradeHorarios.filter(
+    const daySlots = (gradeHorarios || []).filter(
       (h) => h.diaSemana === dia && h.tipo === "livre"
     );
 
-    reservation.openReservationModal(dia, dateForDay, daySlots, labDetails);
+    reservation.openReservationModal(
+      dia, 
+      dateForDay, 
+      daySlots,
+      dadosLaboratorio?.laboratorio
+    );
   };
 
   return (

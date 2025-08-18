@@ -337,3 +337,22 @@
     padding: 10px; /* Padding reduzido em mobile */
   }
 }
+
+/* Estilos para a tabela de horários */
+.horarios-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 8px;
+}
+
+.horarios-table th, .horarios-table td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
+}
+
+.horarios-table th {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  color: #333;
+}

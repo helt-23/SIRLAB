@@ -3,8 +3,7 @@ import { useLabData } from "../../../context/LabDataContext";
 import { X } from "lucide-react";
 import ConfirmationDialog from "../../../components/ConfirmationDialog ";
 import { ReservationCard } from "./reservationCard";
-import {useReservaManager} from "../../../features/reserva/useReserva"
-import "./myReserva.css";
+import { useReservaManager } from "../../../features/reserva/useReserva";
 
 export function BookingReservs() {
   const {
@@ -12,8 +11,8 @@ export function BookingReservs() {
     closeBookingsModal,
     removeUserBooking,
   } = useLabData();
-  const useReserva = useReservaManager()
-  const reservas = useReserva.reservas
+  const useReserva = useReservaManager();
+  const reservas = useReserva.reservas;
 
   const [isConfirmationOpen, setIsConfirmationOpen] = useState(false);
   const [bookingToRemove, setBookingToRemove] = useState(null);
@@ -34,19 +33,32 @@ export function BookingReservs() {
   if (!isBookingsModalOpen) return null;
 
   return (
-    <div className="modal-overlay" onClick={closeBookingsModal}>
-      <main className="reservations-page" onClick={(e) => e.stopPropagation()}>
-        <div className="reservations-container">
-          <header className="reservations-header">
-            <h1 className="reservations-title">Minhas Reservas</h1>
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-[1000] p-4"
+      onClick={closeBookingsModal}
+    >
+      <div 
+        className="bg-white rounded-xl shadow-2xl w-full max-w-6xl h-[90vh] max-h-[90vh] flex flex-col overflow-hidden"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="p-6 relative flex-grow flex flex-col">
+          <header className="text-center mb-6">
+            <h1 className="text-2xl font-bold text-gray-800 relative inline-block pb-3">
+              Minhas Reservas
+              <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-blue-600 rounded-full"></span>
+            </h1>
           </header>
 
           {reservas.length === 0 ? (
-            <div className="div-semReserva">
-              <h3>Você não possui reservas</h3>
+            <div className="flex-grow flex flex-col items-center justify-center text-center p-8">
+              <div className="bg-gray-100 rounded-full p-4 mb-4">
+                <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
+              </div>
+              <h3 className="text-xl font-medium text-gray-600">Você não possui reservas</h3>
+              <p className="text-gray-500 mt-2">Todas as suas reservas aparecerão aqui quando forem criadas.</p>
             </div>
           ) : (
-            <section className="reservation-list">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto pr-2">
               {reservas.map((booking) => (
                 <ReservationCard
                   key={booking.id}
@@ -54,14 +66,17 @@ export function BookingReservs() {
                   onRemoveClick={handleRemoveClick}
                 />
               ))}
-            </section>
+            </div>
           )}
 
-          <button className="close-modal" onClick={closeBookingsModal}>
-            <X size={24} />
+          <button 
+            className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors"
+            onClick={closeBookingsModal}
+          >
+            <X size={24} className="text-gray-600" />
           </button>
         </div>
-      </main>
+      </div>
 
       <ConfirmationDialog
         isOpen={isConfirmationOpen}

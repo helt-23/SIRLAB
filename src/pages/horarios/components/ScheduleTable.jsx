@@ -7,7 +7,6 @@ export function ScheduleTable({
   currentShift,
   currentWeek,
 }) {
-  // Mapeamento de status para estilos
   const statusStyles = {
     livre: {
       className: "available",
@@ -80,17 +79,17 @@ export function ScheduleTable({
         <thead>
           <tr>
             <th>Horário</th>
-            {diasSemana.map((dia) => (
+            {diasSemana?.map((dia) => (
               <th key={dia}>{dia}</th>
             ))}
           </tr>
         </thead>
         <tbody>
-          {horariosUnicos.map((time) => (
+          {horariosUnicos?.map((time) => (
             <tr key={time}>
               <td>{time}</td>
-              {diasSemana.map((dia) => {
-                const horario = horarios.find(
+              {diasSemana?.map((dia) => {
+                const horario = horarios?.find(
                   (h) => h.diaSemana === dia && h.horario === time
                 );
 
@@ -108,9 +107,9 @@ export function ScheduleTable({
                   >
                     <div
                       className={`cell-status ${
-                        statusStyles[horario.tipo].className
+                        statusStyles[horario.tipo]?.className || ""
                       }`}
-                      style={statusStyles[horario.tipo].style}
+                      style={statusStyles[horario.tipo]?.style || {}}
                     >
                       {renderCellContent(horario)}
                     </div>

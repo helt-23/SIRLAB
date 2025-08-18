@@ -1,7 +1,10 @@
+// src/customHooks/useReservation.js
 import { useState, useCallback } from "react";
+import { useReservaManager } from "../features/reserva/useReserva";
 
-export const useReservation = (labId, addUserBooking) => {
-  // Estado do modal de reserva
+export const useReservation = (labId) => {
+  const { solicitarReserva } = useReservaManager();
+  
   const [reservationModal, setReservationModal] = useState({
     open: false,
     day: "",
@@ -10,8 +13,7 @@ export const useReservation = (labId, addUserBooking) => {
     labDetails: null,
   });
 
-  // Estado do formulário de reserva
-  const [selectedSlots, setSelectedSlots] = useState([]);
+  const [selectedSlotIds, setSelectedSlotIds] = useState([]);
   const [reservationType, setReservationType] = useState("");
   const [description, setDescription] = useState("");
   const [file, setFile] = useState(null);
@@ -20,26 +22,22 @@ export const useReservation = (labId, addUserBooking) => {
   const [reservationSuccess, setReservationSuccess] = useState(false);
 
   const reservationTypes = [
-    { value: "aula", label: "Aula" },
-    { value: "manutencao", label: "Manutenção" },
-    { value: "instalacao", label: "Instalação de Software" },
-    { value: "outro", label: "Outro" },
+    { value: 1, label: "Aula" },
+    { value: 2, label: "Manutenção" },
+    { value: 3, label: "Instalação de Software" },
+    { value: 4, label: "Outro" },
   ];
 
-  // Funções para abrir e fechar o modal
-  const openReservationModal = useCallback(
-    (day, date, timeSlots, labDetails) => {
-      setReservationModal({
-        open: true,
-        day,
-        date,
-        timeSlots,
-        labDetails,
-      });
-      resetForm();
-    },
-    []
-  );
+  const openReservationModal = useCallback((day, date, timeSlots, labDetails) => {
+    setReservationModal({
+      open: true,
+      day,
+      date,
+      timeSlots,
+      labDetails,
+    });
+    resetForm();
+  }, []);
 
   const closeReservationModal = useCallback(() => {
     setReservationModal({
@@ -51,41 +49,29 @@ export const useReservation = (labId, addUserBooking) => {
     });
   }, []);
 
-  // Manipulação do formulário
-  const handleSlotChange = useCallback(
-    (slotTime) => {
-      setSelectedSlots((prev) => {
-        if (prev.includes(slotTime)) {
-          return prev.filter((time) => time !== slotTime);
-        } else {
-          return [...prev, slotTime];
-        }
-      });
-
-      if (formErrors.slots) {
-        setFormErrors((prev) => ({ ...prev, slots: null }));
-      }
-    },
-    [formErrors]
-  );
+  const handleSlotChange = useCallback((horarioId) => {
+    setSelectedSlotIds(prev => 
+      prev.includes(horarioId) 
+        ? prev.filter(id => id !== horarioId) 
+        : [...prev, horarioId]
+    );
+    setFormErrors(prev => ({ ...prev, slots: null }));
+  }, []);
 
   const handleFileChange = useCallback((e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile && selectedFile.type === "application/pdf") {
       setFile(selectedFile);
-      setFormErrors((prev) => ({ ...prev, file: null }));
+      setFormErrors(prev => ({ ...prev, file: null }));
     } else {
-      setFormErrors((prev) => ({
-        ...prev,
-        file: "Por favor, selecione um arquivo PDF.",
-      }));
+      setFormErrors(prev => ({ ...prev, file: "Por favor, selecione um arquivo PDF." }));
     }
   }, []);
 
   const validateForm = useCallback(() => {
     const newErrors = {};
 
-    if (selectedSlots.length === 0) {
+    if (selectedSlotIds.length === 0) {
       newErrors.slots = "Selecione pelo menos um horário.";
     }
 
@@ -99,10 +85,10 @@ export const useReservation = (labId, addUserBooking) => {
 
     setFormErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [selectedSlots, reservationType, description]);
+  }, [selectedSlotIds, reservationType, description]);
 
   const resetForm = useCallback(() => {
-    setSelectedSlots([]);
+    setSelectedSlotIds([]);
     setReservationType("");
     setDescription("");
     setFile(null);
@@ -110,73 +96,41 @@ export const useReservation = (labId, addUserBooking) => {
     setReservationSuccess(false);
   }, []);
 
-  // Submissão da reserva: cria uma reserva para cada horário selecionado
-  const handleReserveSubmit = useCallback(() => {
-    if (!validateForm()) return false;
+  const handleConfirmReservation = useCallback(() => {
+    if (!validateForm()) return;
 
-    // Verificar se a data é válida
-    const bookingDate = reservationModal.date;
-    if (!bookingDate || isNaN(bookingDate.getTime())) {
-      console.error("Data de reserva inválida");
-      return false;
-    }
+    // Simulação de ID de usuário - substituir quando o auth estiver funcionando AAAAAAAAAAAA
+    const usuarioId = 1; // Valor temporário
 
-    // Para cada horário selecionado, criar uma reserva
-    selectedSlots.forEach((slot) => {
-      const [startTime, endTime] = slot.split(" - ");
+    const reservaData = {
+      descricao: description,
+      caminhoPdf: null, // Implementar upload posteriormente
+      tipoReserva: parseInt(reservationType),
+      horariosId: selectedSlotIds,
+      laboratorioId: parseInt(labId),
+      usuarioId
+    };
 
-      const newBooking = {
-        id: Date.now() + Math.random(), // ID único
-        labId,
-        status: "pendente",
-        labSala:
-          reservationModal.labDetails?.sala || "Laboratório Desconhecido",
-        requestDate: new Date().toISOString(),
-        bookingDate: bookingDate.toISOString(),
-        startTime,
-        endTime,
-        dia: reservationModal.day,
-        horario: slot,
-        usuario: { nome: "Usuário", matricula: "2023001" },
-        reservationType,
-        description,
-        file: file ? file.name : null,
-      };
-
-      addUserBooking(newBooking);
+    solicitarReserva(reservaData, {
+      onSuccess: () => {
+        setReservationSuccess(true);
+        setTimeout(() => {
+          closeReservationModal();
+        }, 3000);
+      },
+      onError: (error) => {
+        console.error("Erro ao solicitar reserva:", error);
+        setFormErrors({ submit: "Falha ao criar reserva. Tente novamente." });
+      }
     });
 
-    return true;
-  }, [
-    validateForm,
-    selectedSlots,
-    reservationModal,
-    labId,
-    addUserBooking,
-    reservationType,
-    description,
-    file,
-  ]);
-
-  const handleConfirmReservation = useCallback(() => {
-    const success = handleReserveSubmit();
-    if (success) {
-      setShowConfirmation(false);
-      setReservationSuccess(true);
-
-      // Fecha automaticamente após 3 segundos
-      setTimeout(() => {
-        setReservationSuccess(false);
-        closeReservationModal();
-      }, 3000);
-    }
-  }, [handleReserveSubmit, closeReservationModal]);
+    setShowConfirmation(false);
+  }, [validateForm, description, reservationType, selectedSlotIds, labId, solicitarReserva, closeReservationModal]);
 
   return {
-    // Estados
-     isModalOpen: reservationModal.open,
+    isModalOpen: reservationModal.open,
     reservationModal,
-    selectedSlots,
+    selectedSlotIds,
     reservationType,
     description,
     file,
@@ -184,9 +138,6 @@ export const useReservation = (labId, addUserBooking) => {
     showConfirmation,
     reservationTypes,
     reservationSuccess,
-    setReservationSuccess,
-
-    // Funções
     openReservationModal,
     closeReservationModal,
     handleSlotChange,
@@ -194,8 +145,6 @@ export const useReservation = (labId, addUserBooking) => {
     setReservationType,
     setDescription,
     validateForm,
-    resetForm,
-    handleReserveSubmit,
     handleConfirmReservation,
     setShowConfirmation,
   };
