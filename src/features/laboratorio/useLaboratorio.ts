@@ -7,10 +7,9 @@ import {
     useUpdateLaboratorio
 } from './api'
 
-export function useLaboratorioManager(){
+export function useLaboratorioManager(labId?: number){
     const [status, setStatus] = useState(true)
     const [blocoId, setBlocoId] = useState()
-    const [labId, setLabId] = useState()
 
     const {data: laboratorios = [], isLoading: isListaLoading, isError: isListError, error: listError} = useGetLaboratorios(status, blocoId)
     const {data: laboratorioDetalhado, isLoading: isDetalhesLoading, isError: isDetalhesError, error: detalhesError} = useGetLaboratorioDetalhado(labId)
@@ -37,7 +36,6 @@ export function useLaboratorioManager(){
         cadastrarLaboratorio,
         atualizarLaboratorio,
         inativarLaboratorio,
-        setBlocoId,
-        setLabId
+        setBlocoId
     }
 }

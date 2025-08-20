@@ -13,14 +13,7 @@ export function LabScheduleManager() {
   const [currentWeek, setCurrentWeek] = useState(0);
   const [showDetail, setShowDetail] = useState(false);
   
-  const laboratorioManager = useLaboratorioManager();
-  
-  // Carrega detalhes do laboratório
-  useEffect(() => {
-    if (labId) {
-      laboratorioManager.setLabId(labId);
-    }
-  }, [labId, laboratorioManager]);
+  const laboratorioManager = useLaboratorioManager(Number(labId));
 
   const { getDateForDay } = useWeekManager(currentWeek);
   const dadosLaboratorio = laboratorioManager.laboratorioDetalhado;

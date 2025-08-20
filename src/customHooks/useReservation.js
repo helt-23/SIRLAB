@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useReservaManager } from "../features/reserva/useReserva";
 
 export const useReservation = (labId) => {
-  const { solicitarReserva } = useReservaManager();
+  const { solicitarReserva, setLabId } = useReservaManager();
   
   const [reservationModal, setReservationModal] = useState({
     open: false,
@@ -114,6 +114,7 @@ export const useReservation = (labId) => {
       try {
         // 1. Chama a mutação e espera o resultado
         const resultadoDaApi = await solicitarReserva(reservaData);
+
         setReservationSuccess(true);
         setTimeout(() => {
           closeReservationModal();

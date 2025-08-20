@@ -12,11 +12,15 @@ export function useGetReservas(){
 }
 
 export function useSolicitarReserva(){
+
     const queryClient = useQueryClient()
 
     return useMutation({
         mutationFn: (dados: RequestReservaType) => ReservaServices.solicitarReserva(dados),
-        onSuccess: () => {
+        onSuccess: (data, variables, context) => {
+            
+            console.log(variables?.laboratorioId)
+            queryClient.invalidateQueries({queryKey: ['laboratorio', variables?.laboratorioId]})
             queryClient.invalidateQueries({queryKey: [QUERY_KEY]})
         },
         onError: (err) => {
