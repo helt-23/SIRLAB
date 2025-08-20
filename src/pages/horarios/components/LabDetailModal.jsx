@@ -5,13 +5,14 @@ import { X } from "lucide-react";
 }
 export function LabDetailModal({ isOpen, onClose, labDetails }) {
   if (!isOpen || !labDetails) return null;
+  
+  const laboratorio = labDetails?.laboratorio
+  const hardwares = labDetails?.equipamentos || []
+  const softwares = labDetails?.softwares || []
 
   const handleOverlayClick = (e) => {
     if (e.target === e.currentTarget) onClose();
   };
-
-  const hardwares = labDetails.hardwares || [];
-  const softwares = labDetails.softwares || [];
 
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
@@ -21,16 +22,16 @@ export function LabDetailModal({ isOpen, onClose, labDetails }) {
         </button>
 
         <div className="modal-header">
-          <h2 className="modal__title">{labDetails.descricao || "Laboratório"}</h2>
+          <h2 className="modal__title">{laboratorio.descricao || "Laboratório"}</h2>
           <div className="lab-status-container">
             <span
               className={`lab-status ${
-                labDetails.disponivel ? "available" : "occupied"
+                laboratorio.disponivel ? "available" : "occupied"
               }`}
             >
-              {labDetails.disponivel ? "Disponível" : "Ocupado"}
+              {laboratorio.disponivel ? "Disponível" : "Ocupado"}
             </span>
-            <span className="lab-capacity">{labDetails.lugares} lugares</span>
+            <span className="lab-capacity">{laboratorio.capacidade} lugares</span>
           </div>
         </div>
 
@@ -41,10 +42,10 @@ export function LabDetailModal({ isOpen, onClose, labDetails }) {
             </div>
             <div className="info-card-content">
               <p className="modal__text">
-                {labDetails.descricao || "Sem descrição disponível"}
+                {laboratorio.descricao || "Sem descrição disponível"}
               </p>
               <p className="modal__text">
-                {labDetails.detalhe || "Sem detalhe disponível"}
+                {laboratorio.observacao || "Sem detalhe disponível"}
               </p>
             </div>
           </div>

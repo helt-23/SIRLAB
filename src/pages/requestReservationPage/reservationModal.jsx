@@ -47,6 +47,7 @@ const ReservationModal = ({
 
   if (!isOpen) return null;
 
+
   return (
     <>
       <div 
@@ -104,7 +105,7 @@ const ReservationModal = ({
             <p>
               <strong>Horários:</strong>{" "}
               {timeSlots
-                .filter(slot => selectedSlotIds.includes(slot.id))
+                .filter(slot => selectedSlotIds.includes(slot.horarioId))
                 .map(slot => `${slot.horaInicio} - ${slot.horaFim}`)
                 .join(", ") || "Nenhum horário selecionado"}
             </p>

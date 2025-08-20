@@ -1,6 +1,7 @@
 import { Users, Clock, Info } from "lucide-react";
 
 export function LabInfoCard({ labDetails, setShowDetail, showDetail }) {
+  
   if (!labDetails) return null;
 
   return (

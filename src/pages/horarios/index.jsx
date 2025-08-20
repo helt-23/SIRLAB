@@ -25,6 +25,7 @@ export function LabScheduleManager() {
   const { getDateForDay } = useWeekManager(currentWeek);
   const dadosLaboratorio = laboratorioManager.laboratorioDetalhado;
   
+  //console.log(dadosLaboratorio)
   // Processa os horários para exibição
   const {
     diasSemana,
@@ -58,9 +59,10 @@ export function LabScheduleManager() {
     );
   };
 
+
   return (
     <LabScheduleView
-      labDetails={dadosLaboratorio?.laboratorio}
+      labDetails={dadosLaboratorio}
       showDetail={showDetail}
       setShowDetail={setShowDetail}
       currentShift={currentShift}

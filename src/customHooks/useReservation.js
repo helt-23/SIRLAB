@@ -96,7 +96,7 @@ export const useReservation = (labId) => {
     setReservationSuccess(false);
   }, []);
 
-  const handleConfirmReservation = useCallback(() => {
+  const handleConfirmReservation = useCallback(async() => {
     if (!validateForm()) return;
 
     // Simulação de ID de usuário - substituir quando o auth estiver funcionando AAAAAAAAAAAA
@@ -111,20 +111,22 @@ export const useReservation = (labId) => {
       usuarioId
     };
 
-    solicitarReserva(reservaData, {
-      onSuccess: () => {
+      try {
+        // 1. Chama a mutação e espera o resultado
+        const resultadoDaApi = await solicitarReserva(reservaData);
         setReservationSuccess(true);
         setTimeout(() => {
           closeReservationModal();
         }, 3000);
-      },
-      onError: (error) => {
-        console.error("Erro ao solicitar reserva:", error);
-        setFormErrors({ submit: "Falha ao criar reserva. Tente novamente." });
-      }
-    });
 
-    setShowConfirmation(false);
+      } catch (error) {
+        console.error("Erro ao solicitar reserva (no componente):", error);
+        setFormErrors({ submit: "Falha ao criar reserva. Tente novamente." });
+      } finally {
+        // A lógica de `setShowConfirmation` pode ser controlada pelo estado de pending
+        setShowConfirmation(false);
+      }
+
   }, [validateForm, description, reservationType, selectedSlotIds, labId, solicitarReserva, closeReservationModal]);
 
   return {
