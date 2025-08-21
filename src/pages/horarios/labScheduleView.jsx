@@ -20,16 +20,13 @@ export default function LabScheduleView({
   onCellClick,
   reservation,
 }) {
-
-  const laboratorio = labDetails?.laboratorio
-
   return (
     <div className="lab-schedule">
       <main className="main-content">
         <Breadcrumb />
         <div className="schedule-container">
           <LabInfoCard
-            labDetails={laboratorio}
+            labDetails={labDetails}
             setShowDetail={setShowDetail}
             showDetail={showDetail}
           />

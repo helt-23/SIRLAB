@@ -1,7 +1,6 @@
 import { Users, Clock, Info } from "lucide-react";
 
 export function LabInfoCard({ labDetails, setShowDetail, showDetail }) {
-  
   if (!labDetails) return null;
 
   return (
@@ -22,7 +21,7 @@ export function LabInfoCard({ labDetails, setShowDetail, showDetail }) {
             <div className="lab-info-card__details-item">
               <Clock size={16} className="icon" />
               <div>
-                <strong>Sala {labDetails.localizacao}</strong>
+                <strong>{labDetails.localizacao}</strong>
                 <span>Localização</span>
               </div>
             </div>

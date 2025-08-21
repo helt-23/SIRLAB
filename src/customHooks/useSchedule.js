@@ -1,5 +1,11 @@
 // src/customHooks/useSchedule.js
 import { useMemo } from "react";
+import {
+  diaStringParaNumero,
+  numeroParaDiaAbreviado,
+  getDiasNumerosOrdenados,
+  getDiasAbreviadosOrdenados,
+} from "./diaSemanaUtil";
 
 // Funções auxiliares
 const getShift = (startTime) => {
@@ -14,53 +20,21 @@ const formatTime = (time) => time.slice(0, 5);
 const createTimeSlot = (start, end) =>
   `${formatTime(start)} - ${formatTime(end)}`;
 
-// Normaliza nomes de dias
-const normalizeDia = (dia) =>
-  dia
-    .toLowerCase()
-    .replace("ç", "c")
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "");
-
-// Converte para formato abreviado
-const abbreviateDia = (dia) => {
-  const diasMap = {
-    segunda: "Seg",
-    terca: "Ter",
-    quarta: "Qua",
-    quinta: "Qui",
-    sexta: "Sex",
-    sabado: "Sab",
-    domingo: "Dom",
-  };
-  return diasMap[dia] || dia;
-};
-
 export const useSchedule = (
   horarios,
   currentShift,
   backendMode = false,
   allBookings = []
 ) => {
-  // 1. Processar entrada baseada no modo
+  // 1. Processar entrada - converter dias para números
   const processedHorarios = useMemo(() => {
     if (!horarios) return [];
 
-    if (backendMode) {
-      // Converter estrutura backend para formato mock
-      return horarios.flatMap((horario) => ({
-        data: horario.data,
-        diaSemana: horario.diaSemana,
-        horarioInicio: horario.horarioInicio,
-        horarioFim: horario.horarioFim,
-        id: horario.id,
-        isDisponivel: horario.isDisponivel,
-        reserva: horario.reserva,
-      }));
-    }
-
-    return horarios;
-  }, [horarios, backendMode]);
+    return horarios.map((horario) => ({
+      ...horario,
+      diaNumero: diaStringParaNumero(horario.diaSemana),
+    }));
+  }, [horarios]);
 
   // 2. Filtrar horários pelo turno
   const filteredHorarios = useMemo(() => {
@@ -69,28 +43,21 @@ export const useSchedule = (
     );
   }, [processedHorarios, currentShift]);
 
-  // 3. Processar dias da semana
-  const diasSemana = useMemo(() => {
-    const normalizedDias = filteredHorarios.map((item) =>
-      normalizeDia(item.diaSemana)
+  // 3. Processar dias da semana - usar números
+  const diasNumeros = useMemo(() => {
+    const numerosPresentes = filteredHorarios.map((item) => item.diaNumero);
+    return getDiasNumerosOrdenados().filter((num) =>
+      numerosPresentes.includes(num)
     );
-
-    const dayOrder = [
-      "segunda",
-      "terca",
-      "quarta",
-      "quinta",
-      "sexta",
-      "sabado",
-      "domingo",
-    ];
-
-    return [...new Set(normalizedDias)]
-      .sort((a, b) => dayOrder.indexOf(a) - dayOrder.indexOf(b))
-      .map(abbreviateDia);
   }, [filteredHorarios]);
 
-  // 4. Criar slots de horário únicos
+  // 4. Converter números para abreviações para exibição
+  const diasSemana = useMemo(
+    () => diasNumeros.map(numeroParaDiaAbreviado),
+    [diasNumeros]
+  );
+
+  // 5. Criar slots de horário únicos
   const uniqueTimeSlots = useMemo(() => {
     const slots = filteredHorarios.map((item) =>
       createTimeSlot(item.horarioInicio, item.horarioFim)
@@ -101,24 +68,14 @@ export const useSchedule = (
     );
   }, [filteredHorarios]);
 
-  // 5. Montar grade de horários
+  // 6. Montar grade de horários
   const scheduleGrid = useMemo(() => {
     return uniqueTimeSlots.flatMap((slot) =>
-      diasSemana
-        .map((dia) => {
-          const fullDayName = {
-            Seg: "segunda",
-            Ter: "terca",
-            Qua: "quarta",
-            Qui: "quinta",
-            Sex: "sexta",
-            Sab: "sabado",
-            Dom: "domingo",
-          }[dia];
-
+      diasNumeros
+        .map((diaNumero) => {
           const scheduleItem = filteredHorarios.find(
             (item) =>
-              normalizeDia(item.diaSemana) === fullDayName &&
+              item.diaNumero === diaNumero &&
               createTimeSlot(item.horarioInicio, item.horarioFim) === slot
           );
 
@@ -134,7 +91,7 @@ export const useSchedule = (
             scheduleType = "livre";
           }
 
-          // Verificar se é reserva do usuário (backend)
+          // Verificar se é reserva do usuário
           let isUserBooking = false;
           if (backendMode && scheduleItem.reserva) {
             isUserBooking = allBookings.some(
@@ -149,7 +106,8 @@ export const useSchedule = (
           return {
             horaInicio: formatTime(scheduleItem.horarioInicio),
             horaFim: formatTime(scheduleItem.horarioFim),
-            diaSemana: dia,
+            diaSemana: numeroParaDiaAbreviado(diaNumero), // Para exibição
+            diaNumero: diaNumero, // Para cálculos internos
             tipo: scheduleType,
             dados: scheduleItem.reserva,
             horario: slot,
@@ -159,7 +117,13 @@ export const useSchedule = (
         })
         .filter(Boolean)
     );
-  }, [filteredHorarios, diasSemana, uniqueTimeSlots, backendMode, allBookings]);
+  }, [
+    filteredHorarios,
+    diasNumeros,
+    uniqueTimeSlots,
+    backendMode,
+    allBookings,
+  ]);
 
   return {
     diasSemana,

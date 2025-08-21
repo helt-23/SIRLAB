@@ -5,6 +5,10 @@ import { useSchedule } from "../../customHooks/useSchedule";
 import { useWeekManager } from "../../customHooks/useWeekManeger";
 import { useReservation } from "../../customHooks/useReservation";
 import { useLaboratorioManager } from "../../features/laboratorio/useLaboratorio";
+import {
+  diaAbreviadoParaNumero,
+  numeroParaDiaCompleto,
+} from "../../customHooks/diaSemanaUtil";
 import LabScheduleView from "./labScheduleView";
 
 export function LabScheduleManager() {
@@ -12,13 +16,12 @@ export function LabScheduleManager() {
   const [currentShift, setCurrentShift] = useState("manhã");
   const [currentWeek, setCurrentWeek] = useState(0);
   const [showDetail, setShowDetail] = useState(false);
-  
+
   const laboratorioManager = useLaboratorioManager(Number(labId));
 
   const { getDateForDay } = useWeekManager(currentWeek);
   const dadosLaboratorio = laboratorioManager.laboratorioDetalhado;
-  
-  //console.log(dadosLaboratorio)
+
   // Processa os horários para exibição
   const {
     diasSemana,
@@ -28,30 +31,23 @@ export function LabScheduleManager() {
 
   const reservation = useReservation(labId);
 
-  const handleCellClick = (dia) => {
-    const diaNormalizado = {
-      Seg: "segunda",
-      Ter: "terça",
-      Qua: "quarta",
-      Qui: "quinta",
-      Sex: "sexta",
-      Sab: "sábado",
-      Dom: "domingo",
-    }[dia] || dia;
+  const handleCellClick = (diaAbreviado) => {
+    // Converter a abreviação para número e depois para o nome completo
+    const diaNumero = diaAbreviadoParaNumero(diaAbreviado);
+    const diaCompleto = numeroParaDiaCompleto(diaNumero);
 
-    const dateForDay = getDateForDay(diaNormalizado);
+    const dateForDay = getDateForDay(diaCompleto);
     const daySlots = (gradeHorarios || []).filter(
-      (h) => h.diaSemana === dia && h.tipo === "livre"
+      (h) => h.diaSemana === diaAbreviado && h.tipo === "livre"
     );
 
     reservation.openReservationModal(
-      dia, 
-      dateForDay, 
+      diaAbreviado,
+      dateForDay,
       daySlots,
       dadosLaboratorio?.laboratorio
     );
   };
-
 
   return (
     <LabScheduleView

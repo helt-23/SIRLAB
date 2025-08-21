@@ -6,11 +6,8 @@ import { ReservationCard } from "./reservationCard";
 import { useReservaManager } from "../../../features/reserva/useReserva";
 
 export function BookingReservs() {
-  const {
-    isBookingsModalOpen,
-    closeBookingsModal,
-    removeUserBooking,
-  } = useLabData();
+  const { isBookingsModalOpen, closeBookingsModal, removeUserBooking } =
+    useLabData();
   const useReserva = useReservaManager();
   const reservas = useReserva.reservas;
 
@@ -33,11 +30,11 @@ export function BookingReservs() {
   if (!isBookingsModalOpen) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-[1000] p-4"
       onClick={closeBookingsModal}
     >
-      <div 
+      <div
         className="bg-white rounded-xl shadow-2xl w-full max-w-6xl h-[90vh] max-h-[90vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
@@ -54,8 +51,12 @@ export function BookingReservs() {
               <div className="bg-gray-100 rounded-full p-4 mb-4">
                 <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
               </div>
-              <h3 className="text-xl font-medium text-gray-600">Você não possui reservas</h3>
-              <p className="text-gray-500 mt-2">Todas as suas reservas aparecerão aqui quando forem criadas.</p>
+              <h3 className="text-xl font-medium text-gray-600">
+                Você não possui reservas
+              </h3>
+              <p className="text-gray-500 mt-2">
+                Todas as suas reservas aparecerão aqui quando forem criadas.
+              </p>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto pr-2">
@@ -69,7 +70,7 @@ export function BookingReservs() {
             </div>
           )}
 
-          <button 
+          <button
             className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors"
             onClick={closeBookingsModal}
           >
