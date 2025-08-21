@@ -25,5 +25,11 @@ export const ReservaServices = {
     async cancelarReserva(id: number): Promise<void>{
         const response = await apiBackend.put(`/reserva/cancelar/${id}`)
         return response.data
+    },
+
+    async deletarReserva(id: number): Promise<void>{
+        const response = await apiBackend.delete(`/reserva/${id}`)
+        return response.data
+
     }
 }

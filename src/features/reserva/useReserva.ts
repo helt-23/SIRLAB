@@ -3,7 +3,8 @@ import {
     useSolicitarReserva,
     useConfirmarReserva,
     useNegarReserva,
-    useCancelarReserva
+    useCancelarReserva,
+    useDeletarReserva
 } from './api'
 
 export function useReservaManager(){
@@ -13,8 +14,9 @@ export function useReservaManager(){
     const {mutate: confirmarReserva, isPending: isUpdatingConf} = useConfirmarReserva()
     const {mutate: negarReserva, isPending: isUpdatingNegar} = useNegarReserva()
     const {mutate: cancelarReserva, isPending: isUpdatingCanc} = useCancelarReserva()
+    const {mutate: deletarReserva, isPending: isUpdatingDel} = useDeletarReserva()
 
-    const loading = isCreating || isUpdatingConf || isUpdatingNegar || isUpdatingCanc
+    const loading = isCreating || isUpdatingConf || isUpdatingNegar || isUpdatingCanc || isUpdatingDel
     return {
         reservas,
         isListaLoading,
@@ -24,11 +26,13 @@ export function useReservaManager(){
         isCreating,
         isUpdatingCanc,
         isUpdatingNegar,
+        isUpdatingDel,
 
         //Ações
         solicitarReserva,
         confirmarReserva,
         negarReserva,
-        cancelarReserva
+        cancelarReserva,
+        deletarReserva
     }
 }

@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 import { useReservaManager } from "../features/reserva/useReserva";
 
 export const useReservation = (labId) => {
-  const { solicitarReserva, setLabId } = useReservaManager();
+  const { solicitarReserva } = useReservaManager();
   
   const [reservationModal, setReservationModal] = useState({
     open: false,

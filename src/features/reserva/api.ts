@@ -71,3 +71,17 @@ export function useCancelarReserva(){
     })
 }
 
+export function useDeletarReserva(){
+    const queryClient = useQueryClient()
+    return useMutation({
+        mutationFn: ({id}: {id: number}) => ReservaServices.deletarReserva(id),
+        onSuccess: () => {
+            queryClient.invalidateQueries({queryKey: [QUERY_KEY]})
+        },
+        onError: (err) => {
+            console.log(err)
+        }
+    })
+
+}
+
