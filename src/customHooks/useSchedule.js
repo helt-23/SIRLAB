@@ -4,7 +4,6 @@ import {
   diaStringParaNumero,
   numeroParaDiaAbreviado,
   getDiasNumerosOrdenados,
-  getDiasAbreviadosOrdenados,
 } from "./diaSemanaUtil";
 
 // Funções auxiliares
@@ -23,27 +22,38 @@ const createTimeSlot = (start, end) =>
 export const useSchedule = (
   horarios,
   currentShift,
+  weekDates, // Recebendo as datas da semana
   backendMode = false,
   allBookings = []
 ) => {
-  // 1. Processar entrada - converter dias para números
-  const processedHorarios = useMemo(() => {
-    if (!horarios) return [];
+  // 1. Filtrar horários pela semana atual
+  const horariosDaSemana = useMemo(() => {
+    if (!horarios || !weekDates) return [];
 
-    return horarios.map((horario) => ({
+    return horarios.filter((horario) => {
+      const horarioDate = new Date(horario.data).toISOString().split("T")[0];
+      return weekDates.includes(horarioDate);
+    });
+  }, [horarios, weekDates]);
+
+  // 2. Processar entrada - converter dias para números
+  const processedHorarios = useMemo(() => {
+    if (!horariosDaSemana) return [];
+
+    return horariosDaSemana.map((horario) => ({
       ...horario,
       diaNumero: diaStringParaNumero(horario.diaSemana),
     }));
-  }, [horarios]);
+  }, [horariosDaSemana]);
 
-  // 2. Filtrar horários pelo turno
+  // 3. Filtrar horários pelo turno
   const filteredHorarios = useMemo(() => {
     return processedHorarios.filter(
       (item) => getShift(item.horarioInicio) === currentShift
     );
   }, [processedHorarios, currentShift]);
 
-  // 3. Processar dias da semana - usar números
+  // 4. Processar dias da semana - usar números
   const diasNumeros = useMemo(() => {
     const numerosPresentes = filteredHorarios.map((item) => item.diaNumero);
     return getDiasNumerosOrdenados().filter((num) =>
@@ -51,13 +61,13 @@ export const useSchedule = (
     );
   }, [filteredHorarios]);
 
-  // 4. Converter números para abreviações para exibição
+  // 5. Converter números para abreviações para exibição
   const diasSemana = useMemo(
     () => diasNumeros.map(numeroParaDiaAbreviado),
     [diasNumeros]
   );
 
-  // 5. Criar slots de horário únicos
+  // 6. Criar slots de horário únicos
   const uniqueTimeSlots = useMemo(() => {
     const slots = filteredHorarios.map((item) =>
       createTimeSlot(item.horarioInicio, item.horarioFim)
@@ -68,7 +78,7 @@ export const useSchedule = (
     );
   }, [filteredHorarios]);
 
-  // 6. Montar grade de horários
+  // 7. Montar grade de horários
   const scheduleGrid = useMemo(() => {
     return uniqueTimeSlots.flatMap((slot) =>
       diasNumeros

@@ -1,15 +1,22 @@
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useMemo } from "react";
+// src/pages/labSchedulePage/WeekControls.jsx
+import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
+import { useMemo, useState } from "react";
 
-const WeekControls = ({ currentWeek, setCurrentWeek }) => {
+const WeekControls = ({
+  currentWeek,
+  setCurrentWeek,
+  minWeek = 0,
+  maxWeek = 4,
+}) => {
+  const [showDatePicker, setShowDatePicker] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
+
   // Função memorizada para calcular o intervalo da semana
   const weekRange = useMemo(() => {
     const today = new Date();
     const dayOfWeek = today.getDay(); // 0 (domingo) a 6 (sábado)
 
     // Calcula o deslocamento para a segunda-feira:
-    // - Se hoje é domingo (0), segunda é amanhã (+1)
-    // - Caso contrário, segunda é (1 - dia atual)
     const diffToMonday = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
 
     const monday = new Date(today);
@@ -46,18 +53,63 @@ const WeekControls = ({ currentWeek, setCurrentWeek }) => {
       : `${startFormatted} - ${endFormatted}`;
   }, [currentWeek]);
 
+  const handleDateSelect = (date) => {
+    const selected = new Date(date);
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const diffToMonday = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
+    const currentMonday = new Date(today);
+    currentMonday.setDate(today.getDate() + diffToMonday);
+
+    // Calcula a diferença em semanas
+    const diffInTime = selected.getTime() - currentMonday.getTime();
+    const diffInWeeks = Math.floor(diffInTime / (1000 * 60 * 60 * 24 * 7));
+
+    // Limita a semana entre minWeek e maxWeek
+    const newWeek = Math.max(minWeek, Math.min(maxWeek, diffInWeeks));
+    setCurrentWeek(newWeek);
+    setShowDatePicker(false);
+  };
+
   return (
     <div className="week-controls">
       <button
-        onClick={() => setCurrentWeek((w) => Math.max(w - 1, 0))}
-        disabled={currentWeek === 0}
+        onClick={() => setCurrentWeek((w) => Math.max(w - 1, minWeek))}
+        disabled={currentWeek === minWeek}
         aria-label="Semana anterior"
       >
         <ChevronLeft size={20} />
       </button>
-      <span className="week-range">{weekRange}</span>
+
+      <div className="week-range-container">
+        <span className="week-range">{weekRange}</span>
+        <button
+          className="calendar-button"
+          onClick={() => setShowDatePicker(!showDatePicker)}
+          aria-label="Selecionar data no calendário"
+        >
+          <Calendar size={16} />
+        </button>
+
+        {showDatePicker && (
+          <div className="date-picker">
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => {
+                setSelectedDate(e.target.value);
+                handleDateSelect(e.target.value);
+              }}
+              onBlur={() => setTimeout(() => setShowDatePicker(false), 200)}
+              autoFocus
+            />
+          </div>
+        )}
+      </div>
+
       <button
-        onClick={() => setCurrentWeek((w) => w + 1)}
+        onClick={() => setCurrentWeek((w) => Math.min(w + 1, maxWeek))}
+        disabled={currentWeek === maxWeek}
         aria-label="Próxima semana"
       >
         <ChevronRight size={20} />

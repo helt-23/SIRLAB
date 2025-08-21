@@ -2,7 +2,7 @@
 import { Breadcrumb } from "../../components";
 import LabInfoCard from "./components/LabInfoCard";
 import ScheduleControls from "./scheduleManage";
-import ReservationModal from "../requestReservationPage/reservationModal";
+import ReservationModal from "../requestReservationPage/ReservationModal";
 import { AbbreviationPanel, LabDetailModal, ScheduleTable } from "./components";
 import "./app.css";
 
@@ -19,6 +19,10 @@ export default function LabScheduleView({
   horarios,
   onCellClick,
   reservation,
+  weekDates,
+  getDayOfMonth,
+  minWeek,
+  maxWeek,
 }) {
   return (
     <div className="lab-schedule">
@@ -32,10 +36,13 @@ export default function LabScheduleView({
           />
 
           <ScheduleControls
+            scheduleData={labDetails}
             currentShift={currentShift}
             setCurrentShift={setCurrentShift}
             currentWeek={currentWeek}
             setCurrentWeek={setCurrentWeek}
+            minWeek={minWeek}
+            maxWeek={maxWeek}
           />
 
           <ScheduleTable
@@ -45,6 +52,8 @@ export default function LabScheduleView({
             onCellClick={onCellClick}
             currentShift={currentShift}
             currentWeek={currentWeek}
+            weekDates={weekDates}
+            getDayOfMonth={getDayOfMonth}
           />
 
           <AbbreviationPanel />

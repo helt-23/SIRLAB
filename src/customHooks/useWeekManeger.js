@@ -5,8 +5,10 @@ import { useMemo } from "react";
 const getMonday = (weekOffset = 0) => {
   const today = new Date();
   const day = today.getDay(); // 0 (domingo) a 6 (sábado)
-  const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Ajuste para segunda-feira
-  const monday = new Date(today.setDate(diff + 7 * weekOffset));
+  // Ajuste para segunda-feira: se for domingo (0), então -6, senão 1 - day
+  const diff = day === 0 ? -6 : 1 - day;
+  const monday = new Date(today);
+  monday.setDate(today.getDate() + diff + 7 * weekOffset);
   return monday;
 };
 
@@ -42,6 +44,13 @@ export const useWeekManager = (currentWeek = 0) => {
     return date.toISOString().split("T")[0];
   };
 
+  // Função para obter o número do dia do mês para um dia da semana (0 a 6, onde 0 é segunda)
+  const getDayOfMonth = (diaIndex) => {
+    const date = new Date(monday);
+    date.setDate(monday.getDate() + diaIndex);
+    return date.getDate();
+  };
+
   const startDate = weekDates[0];
   const endDate = weekDates[6];
 
@@ -50,5 +59,7 @@ export const useWeekManager = (currentWeek = 0) => {
     startDate,
     endDate,
     getDateForDay,
+    getDayOfMonth,
+    monday, // Adicionando monday para usar no filtro
   };
 };

@@ -1,4 +1,6 @@
 // src/pages/labSchedulePage/components/ScheduleTable.jsx
+import { diaAbreviadoParaNumero } from "../../../customHooks/diaSemanaUtil";
+
 export function ScheduleTable({
   diasSemana,
   horariosUnicos,
@@ -6,6 +8,8 @@ export function ScheduleTable({
   onCellClick,
   currentShift,
   currentWeek,
+  weekDates,
+  getDayOfMonth,
 }) {
   const statusStyles = {
     livre: {
@@ -79,15 +83,23 @@ export function ScheduleTable({
         <thead>
           <tr>
             <th>Horário</th>
-            {diasSemana?.map((dia) => (
-              <th key={dia}>{dia}</th>
-            ))}
+            {diasSemana?.map((dia, index) => {
+              const diaNumero = diaAbreviadoParaNumero(dia);
+              const dayOfMonth = getDayOfMonth(diaNumero);
+              return (
+                <th key={dia}>
+                  {dia}
+                  <br />
+                  <span className="day-number">{dayOfMonth}</span>
+                </th>
+              );
+            })}
           </tr>
         </thead>
         <tbody>
           {horariosUnicos?.map((time) => (
             <tr key={time}>
-              <td>{time}</td>
+              <td className="time-slot">{time}</td>
               {diasSemana?.map((dia) => {
                 const horario = horarios?.find(
                   (h) => h.diaSemana === dia && h.horario === time

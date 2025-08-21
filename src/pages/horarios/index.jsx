@@ -1,5 +1,5 @@
 // src/pages/labSchedulePage/LabScheduleManager.jsx
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import { useSchedule } from "../../customHooks/useSchedule";
 import { useWeekManager } from "../../customHooks/useWeekManeger";
@@ -9,7 +9,7 @@ import {
   diaAbreviadoParaNumero,
   numeroParaDiaCompleto,
 } from "../../customHooks/diaSemanaUtil";
-import LabScheduleView from "./labScheduleView";
+import LabScheduleView from "./LabScheduleView";
 
 export function LabScheduleManager() {
   const { labId } = useParams();
@@ -19,15 +19,54 @@ export function LabScheduleManager() {
 
   const laboratorioManager = useLaboratorioManager(Number(labId));
 
-  const { getDateForDay } = useWeekManager(currentWeek);
+  const { getDateForDay, weekDates, getDayOfMonth } =
+    useWeekManager(currentWeek);
   const dadosLaboratorio = laboratorioManager.laboratorioDetalhado;
 
-  // Processa os horários para exibição
+  // Determinar semanas mínima e máxima com base nos horários disponíveis
+  const { minWeek, maxWeek } = useMemo(() => {
+    if (!dadosLaboratorio?.horarios || dadosLaboratorio.horarios.length === 0) {
+      return { minWeek: 0, maxWeek: 0 };
+    }
+
+    // Encontrar a data mais antiga e mais recente nos horários
+    const dates = dadosLaboratorio.horarios
+      .map((h) => new Date(h.data))
+      .filter((date) => !isNaN(date.getTime()));
+
+    if (dates.length === 0) {
+      return { minWeek: 0, maxWeek: 0 };
+    }
+
+    const minDate = new Date(Math.min(...dates));
+    const maxDate = new Date(Math.max(...dates));
+
+    const today = new Date();
+    const dayOfWeek = today.getDay();
+    const diffToMonday = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
+    const currentMonday = new Date(today);
+    currentMonday.setDate(today.getDate() + diffToMonday);
+
+    // Calcular diferença em semanas
+    const minDiff = Math.floor(
+      (minDate - currentMonday) / (7 * 24 * 60 * 60 * 1000)
+    );
+    const maxDiff = Math.floor(
+      (maxDate - currentMonday) / (7 * 24 * 60 * 60 * 1000)
+    );
+
+    return {
+      minWeek: Math.max(0, minDiff),
+      maxWeek: Math.max(0, maxDiff),
+    };
+  }, [dadosLaboratorio]);
+
+  // Processa os horários para exibição - agora passando weekDates
   const {
     diasSemana,
     horariosUnicos,
     horarios: gradeHorarios,
-  } = useSchedule(dadosLaboratorio?.horarios || [], currentShift);
+  } = useSchedule(dadosLaboratorio?.horarios || [], currentShift, weekDates);
 
   const reservation = useReservation(labId);
 
@@ -63,6 +102,10 @@ export function LabScheduleManager() {
       horarios={gradeHorarios}
       onCellClick={handleCellClick}
       reservation={reservation}
+      weekDates={weekDates}
+      getDayOfMonth={getDayOfMonth}
+      minWeek={minWeek}
+      maxWeek={maxWeek}
     />
   );
 }

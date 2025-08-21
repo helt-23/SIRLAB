@@ -1,4 +1,4 @@
-// src/utils/diaSemanaUtils.js
+// customHooks/diaSemanaUtils.js
 export const DIAS_SEMANA = {
   SEGUNDA: 0,
   TERCA: 1,

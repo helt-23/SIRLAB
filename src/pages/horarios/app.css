@@ -843,3 +843,67 @@ body {
   min-width: 20px;
   min-height: 20px;
 }
+
+/* Adicione ao seu arquivo app.css */
+.week-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.week-range-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.calendar-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.calendar-button:hover {
+  background-color: #f0f0f0;
+}
+
+.date-picker {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+.date-picker input {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  padding: 4px 8px;
+}
+
+.schedule-table th {
+  text-align: center;
+  padding: 8px 4px;
+}
+
+.day-number {
+  font-size: 12px;
+  color: #666;
+  font-weight: normal;
+}
+
+.time-slot {
+  font-weight: 500;
+  padding: 8px 12px;
+}

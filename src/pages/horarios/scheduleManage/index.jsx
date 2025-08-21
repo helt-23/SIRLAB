@@ -8,6 +8,8 @@ const ScheduleControls = ({
   setCurrentShift,
   currentWeek,
   setCurrentWeek,
+  minWeek,
+  maxWeek,
 }) => {
   return (
     <div className="schedule-controls-container">
@@ -20,6 +22,8 @@ const ScheduleControls = ({
         <WeekControls
           currentWeek={currentWeek}
           setCurrentWeek={setCurrentWeek}
+          minWeek={minWeek}
+          maxWeek={maxWeek}
         />
       </div>
     </div>
