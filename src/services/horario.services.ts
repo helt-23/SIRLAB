@@ -1,4 +1,4 @@
-import { ResponseHorarioType, RequestHorarioType } from "../features/horario/types";
+import { ResponseHorarioType, RequestCadastroHorarioType, RequestAlteraHorarioType } from "../features/horario/types";
 import apiBackend from "./api/apiBackend";
 
 export const HorarioServices = {
@@ -7,12 +7,12 @@ export const HorarioServices = {
     //     return response.data
     // },
 
-    async cadastrarHorarioPorPeriodo(dados: RequestHorarioType): Promise<ResponseHorarioType>{
+    async cadastrarHorarioPorPeriodo(dados: RequestCadastroHorarioType): Promise<ResponseHorarioType>{
         const response = await apiBackend.post('/horario/', dados)
         return response.data
     },
 
-    async atualizarHorarioPorPeriodo(dados: RequestHorarioType): Promise<ResponseHorarioType>{
+    async atualizarHorarioPorPeriodo(dados: RequestAlteraHorarioType): Promise<ResponseHorarioType>{
         const response = await apiBackend.put(`/horario/`, dados)
         return response.data
     },

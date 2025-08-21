@@ -10,3 +10,13 @@ export type ResponseHorarioType = {
     isDisponivel: boolean,
     reserva: ResponseReservaType
 }
+
+export type ResponseHorarioSemReserva = {
+    id: number,
+    data: string,
+    horarioInicio: string,
+    horarioFim: string,
+    diaSemana: "SEGUNDA" | "TERCA" | "QUARTA" | "QUINTA" | "SEXTA" | "SABADO" | "DOMINGO",
+    statusHorario: string,
+    isDisponivel: boolean
+}
