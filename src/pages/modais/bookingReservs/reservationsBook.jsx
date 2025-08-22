@@ -38,16 +38,27 @@ export function BookingReservs() {
         className="bg-white rounded-xl shadow-2xl w-full max-w-6xl h-[90vh] max-h-[90vh] flex flex-col overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="p-6 relative flex-grow flex flex-col">
-          <header className="text-center mb-6">
+        {/* Header fixo */}
+        <div className="p-6 border-b border-gray-200 relative shrink-0">
+          <header className="text-center">
             <h1 className="text-2xl font-bold text-gray-800 relative inline-block pb-3">
               Minhas Reservas
               <span className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-24 h-1 bg-blue-600 rounded-full"></span>
             </h1>
           </header>
 
+          <button
+            className="absolute top-6 right-6 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors"
+            onClick={closeBookingsModal}
+          >
+            <X size={24} className="text-gray-600" />
+          </button>
+        </div>
+
+        {/* Área de conteúdo com scroll suave */}
+        <div className="flex-grow overflow-hidden">
           {reservas.length === 0 ? (
-            <div className="flex-grow flex flex-col items-center justify-center text-center p-8">
+            <div className="h-full flex flex-col items-center justify-center text-center p-8">
               <div className="bg-gray-100 rounded-full p-4 mb-4">
                 <div className="bg-gray-200 border-2 border-dashed rounded-xl w-16 h-16" />
               </div>
@@ -59,23 +70,18 @@ export function BookingReservs() {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 overflow-y-auto pr-2">
-              {reservas.map((booking) => (
-                <ReservationCard
-                  key={booking.id}
-                  booking={booking}
-                  onRemoveClick={handleRemoveClick}
-                />
-              ))}
+            <div className="h-full overflow-y-auto smooth-scroll p-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {reservas.map((booking) => (
+                  <ReservationCard
+                    key={booking.id}
+                    booking={booking}
+                    onRemoveClick={handleRemoveClick}
+                  />
+                ))}
+              </div>
             </div>
           )}
-
-          <button
-            className="absolute top-4 right-4 bg-white rounded-full p-2 hover:bg-gray-100 transition-colors"
-            onClick={closeBookingsModal}
-          >
-            <X size={24} className="text-gray-600" />
-          </button>
         </div>
       </div>
 
