@@ -2,6 +2,7 @@
 import { Clock, Calendar, FileText, Tag, XCircle } from "lucide-react";
 
 export const ReservationCard = ({ booking, onRemoveClick }) => {
+
   const formatDate = (dateString) => {
     try {
       const date = new Date(dateString);
@@ -102,6 +103,12 @@ export const ReservationCard = ({ booking, onRemoveClick }) => {
                   <thead className="bg-gray-50">
                     <tr>
                       <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 border-b border-gray-200">
+                        Dia semana
+                      </th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 border-b border-gray-200">
+                        Data
+                      </th>
+                      <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 border-b border-gray-200">
                         Hora Início
                       </th>
                       <th className="text-left py-2 px-3 text-xs font-medium text-gray-500 border-b border-gray-200">
@@ -119,11 +126,19 @@ export const ReservationCard = ({ booking, onRemoveClick }) => {
                           }
                         >
                           <td className="py-2 px-3 text-sm border-b border-gray-200">
-                            {horario.horaInicio}
+                            {horario.diaSemana}
                           </td>
                           <td className="py-2 px-3 text-sm border-b border-gray-200">
-                            {horario.horaFim}
+                            {formatDate(horario.data)}
+
                           </td>
+                          <td className="py-2 px-3 text-sm border-b border-gray-200">
+                            {horario.horarioInicio}
+                          </td>
+                          <td className="py-2 px-3 text-sm border-b border-gray-200">
+                            {horario.horarioFim}
+                          </td>
+
                         </tr>
                       ))
                     ) : (
