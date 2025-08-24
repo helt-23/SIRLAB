@@ -87,6 +87,7 @@ export function LabScheduleManager() {
       dadosLaboratorio?.laboratorio
     );
   };
+  console.log("dadosLaboratorio", dadosLaboratorio);
 
   return (
     <LabScheduleView

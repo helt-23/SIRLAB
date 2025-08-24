@@ -24,13 +24,14 @@ export default function LabScheduleView({
   minWeek,
   maxWeek,
 }) {
+  const dadosLaboratorio = labDetails?.laboratorio;
   return (
     <div className="lab-schedule">
       <main className="main-content">
         <Breadcrumb />
         <div className="schedule-container">
           <LabInfoCard
-            labDetails={labDetails}
+            labDetails={dadosLaboratorio}
             setShowDetail={setShowDetail}
             showDetail={showDetail}
           />

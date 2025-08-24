@@ -1,0 +1,12 @@
+/* Estilos específicos para a área administrativa */
+.min-h-screen.w-full.flex.flex-col {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Sobrescrever estilos globais que possam estar causando centralização */
+.main-content {
+  max-width: 100% !important;
+  margin: 0 !important;
+  width: 100% !important;
+}
