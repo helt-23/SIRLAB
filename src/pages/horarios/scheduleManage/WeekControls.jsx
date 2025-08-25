@@ -11,21 +11,17 @@ const WeekControls = ({
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState("");
 
-  // Função memorizada para calcular o intervalo da semana
   const weekRange = useMemo(() => {
     const today = new Date();
-    const dayOfWeek = today.getDay(); // 0 (domingo) a 6 (sábado)
-
-    // Calcula o deslocamento para a segunda-feira:
+    const dayOfWeek = today.getDay();
     const diffToMonday = dayOfWeek === 0 ? 1 : 1 - dayOfWeek;
 
     const monday = new Date(today);
     monday.setDate(today.getDate() + diffToMonday + currentWeek * 7);
 
     const friday = new Date(monday);
-    friday.setDate(monday.getDate() + 4); // Segunda + 4 dias = sexta
+    friday.setDate(monday.getDate() + 4);
 
-    // Função de formatação
     const formatDate = (date) => {
       return date
         .toLocaleDateString("pt-BR", {
@@ -43,7 +39,6 @@ const WeekControls = ({
     const startFormatted = formatDate(monday);
     const endFormatted = formatDate(friday);
 
-    // Verifica se está no mesmo mês e ano
     const sameMonthYear =
       monday.getMonth() === friday.getMonth() &&
       monday.getFullYear() === friday.getFullYear();
@@ -61,30 +56,29 @@ const WeekControls = ({
     const currentMonday = new Date(today);
     currentMonday.setDate(today.getDate() + diffToMonday);
 
-    // Calcula a diferença em semanas
     const diffInTime = selected.getTime() - currentMonday.getTime();
     const diffInWeeks = Math.floor(diffInTime / (1000 * 60 * 60 * 24 * 7));
 
-    // Limita a semana entre minWeek e maxWeek
     const newWeek = Math.max(minWeek, Math.min(maxWeek, diffInWeeks));
     setCurrentWeek(newWeek);
     setShowDatePicker(false);
   };
 
   return (
-    <div className="week-controls">
+    <div className="flex items-center gap-3 font-medium text-lg flex-wrap justify-center">
       <button
         onClick={() => setCurrentWeek((w) => Math.max(w - 1, minWeek))}
         disabled={currentWeek === minWeek}
         aria-label="Semana anterior"
+        className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
       >
         <ChevronLeft size={20} />
       </button>
 
-      <div className="week-range-container">
-        <span className="week-range">{weekRange}</span>
+      <div className="relative flex items-center gap-2">
+        <span>{weekRange}</span>
         <button
-          className="calendar-button"
+          className="p-1 hover:bg-gray-100 rounded"
           onClick={() => setShowDatePicker(!showDatePicker)}
           aria-label="Selecionar data no calendário"
         >
@@ -92,7 +86,7 @@ const WeekControls = ({
         </button>
 
         {showDatePicker && (
-          <div className="date-picker">
+          <div className="absolute top-full right-0 mt-2 bg-white border border-gray-300 rounded p-2 shadow z-10">
             <input
               type="date"
               value={selectedDate}
@@ -102,6 +96,7 @@ const WeekControls = ({
               }}
               onBlur={() => setTimeout(() => setShowDatePicker(false), 200)}
               autoFocus
+              className="border border-gray-300 rounded px-2 py-1"
             />
           </div>
         )}
@@ -111,6 +106,7 @@ const WeekControls = ({
         onClick={() => setCurrentWeek((w) => Math.min(w + 1, maxWeek))}
         disabled={currentWeek === maxWeek}
         aria-label="Próxima semana"
+        className="p-2 hover:bg-gray-100 rounded-full disabled:opacity-50"
       >
         <ChevronRight size={20} />
       </button>

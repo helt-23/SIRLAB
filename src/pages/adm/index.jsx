@@ -144,7 +144,11 @@ export function AdmPage() {
         />
         <main className="flex-1 p-4 sm:p-6 lg:p-8 bg-slate-100 min-h-screen">
           <PageComponent title={currentPage}>
-            {pages[currentPage] || <p className="text-center py-8 text-slate-500 font-medium">Página não encontrada</p>}
+            {pages[currentPage] || (
+              <p className="text-center py-8 text-slate-500 font-medium">
+                Página não encontrada
+              </p>
+            )}
           </PageComponent>
         </main>
       </div>

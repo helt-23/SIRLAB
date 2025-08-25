@@ -1,5 +1,16 @@
-import React, { useState, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { PlusCircle, Calendar } from "lucide-react";
+
+// Mapeamento de dias da semana para padronização
+const DIAS_SEMANA_MAP = {
+  SEGUNDA: "Segunda",
+  TERCA: "Terça",
+  QUARTA: "Quarta",
+  QUINTA: "Quinta",
+  SEXTA: "Sexta",
+  SABADO: "Sábado",
+  DOMINGO: "Domingo",
+};
 
 // Componente da Tabela de Horários
 const LaboratorioScheduleTable = ({
@@ -7,6 +18,7 @@ const LaboratorioScheduleTable = ({
   aulas,
   disciplinas,
   onAtribuirAula,
+  labFiltro,
 }) => {
   const diasSemana = [
     "Segunda",
@@ -21,7 +33,10 @@ const LaboratorioScheduleTable = ({
   const horariosUnicos = useMemo(() => {
     const horariosSet = new Set();
     horariosLaboratorio.forEach((horario) => {
-      const timeSlot = `${horario.horarioInicio} - ${horario.horarioFim}`;
+      const timeSlot = `${horario.horarioInicio.substring(
+        0,
+        5
+      )} - ${horario.horarioFim.substring(0, 5)}`;
       horariosSet.add(timeSlot);
     });
     return Array.from(horariosSet).sort();
@@ -29,27 +44,49 @@ const LaboratorioScheduleTable = ({
 
   // Verificar se um horário está ocupado
   const isHorarioOcupado = (diaIndex, horario) => {
+    const diaNome = diasSemana[diaIndex];
+
     return aulas.some((aula) => {
+      // Verificar se a aula pertence ao laboratório selecionado
+      if (aula.laboratorioId !== parseInt(labFiltro)) return false;
+
       const padraoHorario = horariosLaboratorio.find(
         (p) => p.id === aula.padraoHorarioId
       );
       if (!padraoHorario) return false;
 
-      const timeSlot = `${padraoHorario.horarioInicio} - ${padraoHorario.horarioFim}`;
-      return padraoHorario.diaSemana === diaIndex && timeSlot === horario;
+      const timeSlot = `${padraoHorario.horarioInicio.substring(
+        0,
+        5
+      )} - ${padraoHorario.horarioFim.substring(0, 5)}`;
+      const diaPadrao =
+        DIAS_SEMANA_MAP[padraoHorario.diaSemana] || padraoHorario.diaSemana;
+
+      return diaPadrao === diaNome && timeSlot === horario;
     });
   };
 
   // Obter disciplina atribuída a um horário
   const getDisciplinaNoHorario = (diaIndex, horario) => {
+    const diaNome = diasSemana[diaIndex];
+
     const aula = aulas.find((a) => {
+      // Verificar se a aula pertence ao laboratório selecionado
+      if (a.laboratorioId !== parseInt(labFiltro)) return false;
+
       const padraoHorario = horariosLaboratorio.find(
         (p) => p.id === a.padraoHorarioId
       );
       if (!padraoHorario) return false;
 
-      const timeSlot = `${padraoHorario.horarioInicio} - ${padraoHorario.horarioFim}`;
-      return padraoHorario.diaSemana === diaIndex && timeSlot === horario;
+      const timeSlot = `${padraoHorario.horarioInicio.substring(
+        0,
+        5
+      )} - ${padraoHorario.horarioFim.substring(0, 5)}`;
+      const diaPadrao =
+        DIAS_SEMANA_MAP[padraoHorario.diaSemana] || padraoHorario.diaSemana;
+
+      return diaPadrao === diaNome && timeSlot === horario;
     });
 
     if (!aula) return null;
@@ -75,42 +112,53 @@ const LaboratorioScheduleTable = ({
           </tr>
         </thead>
         <tbody>
-          {horariosUnicos.map((horario) => (
-            <tr key={horario} className="even:bg-slate-50">
-              <td className="p-3 border border-slate-200 text-center font-medium">
-                {horario}
-              </td>
-              {diasSemana.map((_, diaIndex) => {
-                const ocupado = isHorarioOcupado(diaIndex, horario);
-                const disciplina = getDisciplinaNoHorario(diaIndex, horario);
+          {horariosUnicos.length > 0 ? (
+            horariosUnicos.map((horario) => (
+              <tr key={horario} className="even:bg-slate-50">
+                <td className="p-3 border border-slate-200 text-center font-medium">
+                  {horario}
+                </td>
+                {diasSemana.map((_, diaIndex) => {
+                  const ocupado = isHorarioOcupado(diaIndex, horario);
+                  const disciplina = getDisciplinaNoHorario(diaIndex, horario);
 
-                return (
-                  <td
-                    key={diaIndex}
-                    className="p-2 border border-slate-200 text-center h-16"
-                  >
-                    {ocupado ? (
-                      <div
-                        className="h-full rounded flex items-center justify-center p-2 text-white font-medium text-sm"
-                        style={{
-                          backgroundColor: disciplina?.cor || "#f59e0b",
-                        }}
-                      >
-                        {disciplina?.nome || "Aula"}
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => onAtribuirAula(diaIndex, horario)}
-                        className="w-full h-full rounded bg-green-100 text-green-800 border border-green-300 hover:bg-green-200 transition-colors flex items-center justify-center text-sm font-medium"
-                      >
-                        Disponível
-                      </button>
-                    )}
-                  </td>
-                );
-              })}
+                  return (
+                    <td
+                      key={diaIndex}
+                      className="p-2 border border-slate-200 text-center h-16"
+                    >
+                      {ocupado ? (
+                        <div
+                          className="h-full rounded flex items-center justify-center p-2 text-white font-medium text-sm"
+                          style={{
+                            backgroundColor: disciplina?.cor || "#f59e0b",
+                          }}
+                        >
+                          {disciplina?.nome || "Aula"}
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => onAtribuirAula(diaIndex, horario)}
+                          className="w-full h-full rounded bg-green-100 text-green-800 border border-green-300 hover:bg-green-200 transition-colors flex items-center justify-center text-sm font-medium"
+                        >
+                          Disponível
+                        </button>
+                      )}
+                    </td>
+                  );
+                })}
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td
+                colSpan={diasSemana.length + 1}
+                className="p-4 text-center text-slate-500"
+              >
+                Nenhum horário encontrado para este laboratório.
+              </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
@@ -135,9 +183,7 @@ const AtribuirAulasPage = ({
   // Filtrar horários do laboratório selecionado
   const horariosLaboratorio = useMemo(() => {
     if (!labFiltro) return [];
-    return padroesHorario.filter(
-      (p) => p.laboratorioId === parseInt(labFiltro)
-    );
+    return padroesHorario;
   }, [labFiltro, padroesHorario]);
 
   // Manipuladores de seleção
@@ -167,14 +213,32 @@ const AtribuirAulasPage = ({
 
     // Encontrar o padrão de horário correspondente
     const [inicio, fim] = horarioSelecionado.horario.split(" - ");
-    const padraoHorario = horariosLaboratorio.find(
-      (p) =>
-        p.diaSemana === horarioSelecionado.diaIndex &&
-        p.horarioInicio === inicio &&
-        p.horarioFim === fim
+    const diaNome = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado"][
+      horarioSelecionado.diaIndex
+    ];
+
+    // Encontrar a chave do mapeamento para o dia
+    const diaBackend = Object.keys(DIAS_SEMANA_MAP).find(
+      (key) => DIAS_SEMANA_MAP[key] === diaNome
     );
 
-    if (!padraoHorario) return;
+    const padraoHorario = padroesHorario.find(
+      (p) =>
+        p.diaSemana === diaBackend &&
+        p.horarioInicio.substring(0, 5) === inicio &&
+        p.horarioFim.substring(0, 5) === fim
+    );
+
+    if (!padraoHorario) {
+      console.error("Padrão de horário não encontrado:", {
+        diaBackend,
+        inicio,
+        fim,
+        horariosDisponiveis: padroesHorario,
+      });
+      alert("Erro: Padrão de horário não encontrado.");
+      return;
+    }
 
     // Criar nova aula
     const novaAula = {
@@ -282,6 +346,7 @@ const AtribuirAulasPage = ({
             aulas={aulas}
             disciplinas={disciplinas}
             onAtribuirAula={handleAtribuirAula}
+            labFiltro={labFiltro}
           />
 
           <div className="mt-4 p-3 bg-slate-100 rounded-lg border border-slate-200">

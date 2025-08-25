@@ -1,6 +1,5 @@
 // src/pages/labSchedulePage/components/ScheduleTable.jsx
 import { diaAbreviadoParaNumero } from "../../../customHooks/diaSemanaUtil";
-
 export function ScheduleTable({
   diasSemana,
   horariosUnicos,
@@ -13,30 +12,15 @@ export function ScheduleTable({
 }) {
   const statusStyles = {
     livre: {
-      className: "available",
-      style: {
-        background: "#dcfce7",
-        border: "1px solid #22c55e",
-        color: "#166534",
-      },
+      className: "bg-green-100 border border-green-500 text-green-800",
       label: "Disponível",
     },
     reservado: {
-      className: "reserved",
-      style: {
-        background: "#d1e1f0",
-        border: "1px solid #3b82f6",
-        color: "#031273",
-      },
-      label: "Reservado",
+      className: "bg-blue-100 border border-blue-500 text-blue-900",
+      label: "Reserva em Análise",
     },
     aula: {
-      className: "class",
-      style: {
-        background: "#ffffe0",
-        border: "1px solid #eab308",
-        color: "#c49102",
-      },
+      className: "bg-yellow-100 border border-yellow-500 text-yellow-800",
       label: "Aula",
     },
   };
@@ -45,11 +29,11 @@ export function ScheduleTable({
     switch (horario.tipo) {
       case "aula":
         return (
-          <div className="cell-content">
-            <div className="cell-title">
+          <div className="flex flex-col justify-center items-center p-1">
+            <div className="font-semibold text-sm">
               {horario.dados?.descricao || "Aula"}
             </div>
-            <div className="cell-subtitle">
+            <div className="text-xs">
               {horario.dados?.usuarioNome || "Professor"}
             </div>
           </div>
@@ -57,11 +41,11 @@ export function ScheduleTable({
 
       case "reservado":
         return (
-          <div className="cell-content">
-            <div className="cell-title">
-              {horario.isUserBooking ? "Sua Reserva" : "Reservado"}
+          <div className="flex flex-col justify-center items-center p-1">
+            <div className="font-semibold text-sm">
+              {horario.isUserBooking ? "Em análise" : "Reservado"}
             </div>
-            <div className="cell-subtitle">
+            <div className="text-xs">
               {horario.dados?.usuarioNome || "Usuário"}
             </div>
           </div>
@@ -69,28 +53,36 @@ export function ScheduleTable({
 
       default: // livre
         return (
-          <div className="cell-content">
-            <div className="cell-title">Livre</div>
-            <div className="cell-subtitle">Clique para reservar</div>
+          <div className="flex flex-col justify-center items-center p-1">
+            <div className="font-semibold text-sm">Livre</div>
+            <div className="text-xs">Clique para reservar</div>
           </div>
         );
     }
   };
 
   return (
-    <div className="schedule-table-wrapper">
-      <table className="schedule-table" key={`${currentShift}-${currentWeek}`}>
-        <thead>
+    <div className="overflow-x-auto mb-8 rounded-lg shadow-sm">
+      <table
+        className="w-full border-collapse table-fixed bg-white min-w-[800px]"
+        key={`${currentShift}-${currentWeek}`}
+      >
+        <thead className="bg-gradient-to-r from-blue-900 to-blue-600 text-white sticky left-0">
           <tr>
-            <th>Horário</th>
+            <th className="p-4 font-semibold uppercase tracking-wider min-w-[100px] h-16 border-b border-white/10">
+              Horário
+            </th>
             {diasSemana?.map((dia, index) => {
               const diaNumero = diaAbreviadoParaNumero(dia);
               const dayOfMonth = getDayOfMonth(diaNumero);
               return (
-                <th key={dia}>
+                <th
+                  key={dia}
+                  className="p-4 font-semibold uppercase tracking-wider min-w-[100px] h-16 border-b border-white/10"
+                >
                   {dia}
                   <br />
-                  <span className="day-number">{dayOfMonth}</span>
+                  <span className="text-sm font-normal">{dayOfMonth}</span>
                 </th>
               );
             })}
@@ -99,18 +91,28 @@ export function ScheduleTable({
         <tbody>
           {horariosUnicos?.map((time) => (
             <tr key={time}>
-              <td className="time-slot">{time}</td>
+              <td className="p-2 border border-gray-200 text-center align-middle h-20 font-medium">
+                {time}
+              </td>
               {diasSemana?.map((dia) => {
                 const horario = horarios?.find(
                   (h) => h.diaSemana === dia && h.horario === time
                 );
 
-                if (!horario) return <td key={`${time}-${dia}`}></td>;
+                if (!horario)
+                  return (
+                    <td
+                      key={`${time}-${dia}`}
+                      className="p-2 border border-gray-200"
+                    ></td>
+                  );
 
                 return (
                   <td
                     key={`${time}-${dia}`}
-                    className={horario.tipo === "livre" ? "clickable-cell" : ""}
+                    className={`p-2 border border-gray-200 text-center align-middle h-20 ${
+                      horario.tipo === "livre" ? "cursor-pointer" : ""
+                    }`}
                     onClick={() => {
                       if (horario.tipo === "livre") {
                         onCellClick(dia);
@@ -118,10 +120,9 @@ export function ScheduleTable({
                     }}
                   >
                     <div
-                      className={`cell-status ${
+                      className={`h-full p-2 rounded flex flex-col justify-center items-center transition-all duration-200 ${
                         statusStyles[horario.tipo]?.className || ""
                       }`}
-                      style={statusStyles[horario.tipo]?.style || {}}
                     >
                       {renderCellContent(horario)}
                     </div>
@@ -134,16 +135,12 @@ export function ScheduleTable({
       </table>
 
       {/* Legenda de cores */}
-      <div className="legend-container mt-8">
+      <div className="mt-8 p-3 bg-gray-50 rounded-lg border border-gray-200">
         <div className="flex flex-wrap justify-center gap-4">
           {Object.entries(statusStyles).map(([key, style]) => (
             <div key={key} className="flex items-center">
               <div
-                className="legend-color-box w-5 h-5 rounded-sm mr-2"
-                style={{
-                  background: style.style.background,
-                  border: style.style.border,
-                }}
+                className={`w-5 h-5 rounded-sm mr-2 ${style.className}`}
               ></div>
               <span className="text-sm">{style.label}</span>
             </div>
